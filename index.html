@@ -1,75 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<script>
-// SGS Global Map Interceptor
-window.__sgsCapturedMap = null;
-(function(){
-  if(typeof window !== 'undefined'){
-    var originalL = null;
-    Object.defineProperty(window, 'L', {
-      get: function() { return originalL; },
-      set: function(val) {
-        if(val && val.map && !val.__sgsPatched){
-          var origMap = val.map;
-          val.map = function(id, opts){
-            var m = origMap.call(val, id, opts);
-            window.__sgsCapturedMap = m;
-            return m;
-          };
-          val.__sgsPatched = true;
-        }
-        originalL = val;
-      }
-    });
-  }
-})();
-
-function sgsForceLocate(){
-  var toastMsg = function(m){ try{if(window.toast)window.toast(m,'info');else console.log(m);}catch(e){} };
-  if(!navigator.geolocation){ toastMsg('Geolocalización no soportada'); return; }
-  toastMsg('Obteniendo ubicación...');
-  navigator.geolocation.getCurrentPosition(function(pos){
-    var m = window.__sgsCapturedMap || window.map;
-    if(!m){ toastMsg('Ubicación obtenida pero el mapa no está listo'); return; }
-    try {
-      var lat=pos.coords.latitude, lng=pos.coords.longitude, acc=pos.coords.accuracy||5;
-      if(window.__sgsLocMarker) m.removeLayer(window.__sgsLocMarker);
-      if(window.__sgsLocCirc) m.removeLayer(window.__sgsLocCirc);
-      window.__sgsLocMarker = L.marker([lat,lng]).addTo(m);
-      window.__sgsLocCirc = L.circle([lat,lng], {radius:acc}).addTo(m);
-      if(m.flyTo) m.flyTo([lat,lng], 18); else if(m.setView) m.setView([lat,lng], 18);
-      toastMsg('Ubicación centrada con éxito');
-    } catch(e){ toastMsg('Error al centrar la ubicación'); }
-  }, function(err){ toastMsg('Error de ubicación: '+err.message); }, {enableHighAccuracy:true, timeout:10000});
-}
-document.addEventListener('DOMContentLoaded', function(){
-  var btn = document.getElementById('locate-btn');
-  if(btn){
-    // Remove old listeners by cloning
-    var newBtn = btn.cloneNode(true);
-    btn.parentNode.replaceChild(newBtn, btn);
-    newBtn.addEventListener('click', function(e){ e.preventDefault(); sgsForceLocate(); });
-  }
-});
-</script>
-
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://unpkg.com https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://*.tile.opentopomap.org https://www.ign.es https://servicios.idee.es https://sigma.madrid.es; connect-src 'self' data: blob: https://nominatim.openstreetmap.org https://server.arcgisonline.com https://*.basemaps.cartocdn.com https://*.tile.openstreetmap.org https://*.tile.opentopomap.org https://www.ign.es https://servicios.idee.es https://sigma.madrid.es; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Permissions-Policy" content="geolocation=(self), camera=(self), microphone=(), payment=(), usb=(), serial=()">
-<meta name="sgs-security-profile" content="v16.11; startup-password; no-backdoor; pbkdf2-310k; aes-gcm; csp-allowlist; android-tablet-pc; jpg-autoclean">
+<meta name="sgs-security-profile" content="v16; startup-password; no-backdoor; pbkdf2-310k; aes-gcm; csp-allowlist; jpg-autoclean">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#F36F21">
-<meta name="format-detection" content="telephone=no">
-<meta name="color-scheme" content="light">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<meta name="application-name" content="SGS Field Mapper">
+<meta name="description" content="Editor cartográfico de campo SGS con estructura de carpetas y puntos.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="SGS Mapper">
 <meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"SGS Field Mapper","short_name":"SGS Mapper","start_url":".","display":"standalone","orientation":"any","background_color":"%23F4F5F6","theme_color":"%23F36F21","icons":[{"src":"data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 rx=%2228%22 fill=%22%23F36F21%22/%3E%3Ctext x=%2296%22 y=%22128%22 font-family=%22Arial Black%22 font-size=%2280%22 fill=%22white%22 text-anchor=%22middle%22 font-weight=%22900%22%3ESGS%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
+<link rel="manifest" href='data:application/manifest+json;charset=utf-8,{"name":"SGS Field Mapper","short_name":"SGS Mapper","start_url":".","display":"standalone","background_color":"%23F4F5F6","theme_color":"%23F36F21","icons":[{"src":"data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 rx=%2228%22 fill=%22%23F36F21%22/%3E%3Ctext x=%2296%22 y=%22128%22 font-family=%22Arial Black%22 font-size=%2280%22 fill=%22white%22 text-anchor=%22middle%22 font-weight=%22900%22%3ESGS%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"}]}'>
 <title>SGS Field Mapper [v16] · Editor cartográfico de campo</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
@@ -136,29 +84,6 @@ tailwind.config = { theme:{ extend:{
   @media (max-width:720px){
     aside.w-72{position:absolute;top:0;left:0;bottom:0;width:min(280px,85vw);z-index:1150;box-shadow:8px 0 24px rgba(0,0,0,.18)}
   }
-
-
-/* ============================================================
-   COMPATIBILIDAD ANDROID TABLET + PC · v16.11
-   - Corrige altura con barra de navegación Android/Chrome.
-   - Mejora botones táctiles y scroll en paneles/modales.
-   - Mantiene comportamiento de escritorio.
-   ============================================================ */
-:root{--app-height:min(100vh,100dvh);--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
-html,body,#app{height:var(--app-height)!important;max-height:var(--app-height)!important;}
-body{overscroll-behavior:none;-webkit-tap-highlight-color:transparent;}
-button,input,select,textarea{font-size:16px;}
-button,.topbtn,.tool,[role="button"]{touch-action:manipulation;user-select:none;-webkit-user-select:none;}
-.field-input,input,textarea,select,[contenteditable="true"]{touch-action:auto;user-select:text;-webkit-user-select:text;}
-.overflow-y-auto,.overflow-auto,.modal-scroll,#editor-body,#folder-modal .overflow-y-auto,#export-modal .overflow-y-auto,.leaflet-control-layers-list{touch-action:pan-y!important;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
-#map{touch-action:none;min-height:240px;}
-.leaflet-container{touch-action:none;}
-.leaflet-control-container button,.leaflet-control-container a{min-width:36px;min-height:36px;line-height:36px;}
-#toast-container{max-width:min(92vw,420px)}
-@media (pointer:coarse){.topbtn{min-height:42px;padding:9px 12px;border-radius:9px}.tool{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center}input[type="checkbox"],input[type="radio"]{width:20px;height:20px}#lock-overlay .sgs-pass-input{min-height:48px;font-size:20px;letter-spacing:.22em}#lock-overlay button{min-height:44px}.final-map-handle{min-height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 8px}.final-map-panel{resize:none;max-width:88vw;max-height:70vh}}
-@media (max-width:900px){header .flex.items-center.gap-1\.5{width:100%;gap:6px;overflow-x:auto;flex-wrap:nowrap;padding-bottom:2px;scrollbar-width:thin}header .flex.items-center.gap-1\.5>*{flex:0 0 auto}aside.w-72{width:clamp(240px,34vw,320px)!important}#map{min-height:calc(var(--app-height) - 140px)}}
-@media (max-width:720px){aside.w-72{width:265px!important;max-width:78vw}#project-name{width:44vw!important}.leaflet-control-layers{max-width:70vw}#export-modal>div,#folder-modal>div,#editor{max-height:calc(var(--app-height) - 24px)!important}}
-@media (orientation:portrait) and (max-width:920px){#app>.flex-1.flex.min-h-0.relative{min-height:0}}
 </style>
 <style id="sgs-v16-9-security-ui">
 #draw-hint{display:none!important;visibility:hidden!important;pointer-events:none!important;}
@@ -168,331 +93,6 @@ button,.topbtn,.tool,[role="button"]{touch-action:manipulation;user-select:none;
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-<style id="sgs-android-tablet-hardening">
-html, body, #app { min-height: 100vh; min-height: 100dvh; }
-body { overscroll-behavior: none; }
-#map { touch-action: none; }
-#editor, #legend-panel, aside.w-72, #templates-modal > div, #template-edit-modal > div, #folder-modal > div {
-  max-height: calc(var(--app-height, 100dvh) - 12px) !important;
-}
-@media (pointer: coarse) {
-  .topbtn, .tool, button, input, select, textarea { font-size: 16px !important; }
-  .topbtn, .tool, button { min-height: 44px !important; }
-  .field-input, input, textarea, select { min-height: 44px !important; }
-  #geo-input, #project-name { font-size: 16px !important; }
-  #draw-finish, #draw-cancel { min-height: 40px !important; }
-}
-@media (max-width: 1024px) {
-  aside.w-72 { position: absolute !important; left: 0; top: 0; bottom: 0; z-index: 1150; width: min(300px, 82vw) !important; box-shadow: 8px 0 24px rgba(0,0,0,.18); }
-  #editor, #legend-panel { position: absolute !important; right: 0; top: 0; bottom: 0; width: min(380px, 92vw) !important; z-index: 1200; box-shadow: -8px 0 24px rgba(0,0,0,.18); }
-}
-</style>
-<script>
-(function(){
-  function setVH(){
-    try {
-      var h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--app-height', h + 'px');
-    } catch(e) {}
-  }
-  window.addEventListener('resize', setVH, {passive:true});
-  window.addEventListener('orientationchange', setVH, {passive:true});
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener('resize', setVH, {passive:true});
-    window.visualViewport.addEventListener('scroll', setVH, {passive:true});
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    setVH();
-    var map = document.getElementById('map');
-    if(map){
-      map.addEventListener('touchmove', function(){}, {passive:true});
-    }
-    ['geo-input','project-name'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(!el) return;
-      el.addEventListener('focus', function(){ setTimeout(setVH, 250); }, {passive:true});
-      el.addEventListener('blur', function(){ setTimeout(setVH, 250); }, {passive:true});
-    });
-  });
-})();
-</script>
-
-
-<style id="sgs-android-touch-drawing">
-@media (pointer: coarse) {
-  .leaflet-container { -webkit-user-select: none; user-select: none; }
-  .leaflet-marker-icon, .leaflet-interactive { touch-action: none !important; }
-}
-</style>
-<script>
-(function(){
-  function preventDoubleTapZoom(){
-    var last = 0;
-    document.addEventListener('touchend', function(e){
-      var now = Date.now();
-      if(now - last < 280){
-        try {
-          if(e.target && e.target.closest && (e.target.closest('#map') || e.target.closest('.leaflet-container'))) e.preventDefault();
-        } catch(err) {}
-      }
-      last = now;
-    }, {passive:false});
-  }
-  function hardenMapTouch(){
-    var mapEl = document.getElementById('map');
-    if(!mapEl) return;
-    mapEl.addEventListener('gesturestart', function(e){ e.preventDefault(); }, {passive:false});
-    mapEl.addEventListener('touchmove', function(){}, {passive:true});
-  }
-  function finishDrawOnLongPress(){
-    var mapEl = document.getElementById('map');
-    if(!mapEl) return;
-    var t = null, sx = 0, sy = 0;
-    mapEl.addEventListener('touchstart', function(e){
-      if(!e.touches || e.touches.length !== 1) return;
-      sx = e.touches[0].clientX; sy = e.touches[0].clientY;
-      t = setTimeout(function(){
-        try {
-          if(typeof window.finishDraw === 'function' && window.drawing && window.drawing.pts && window.drawing.pts.length >= 2) window.finishDraw();
-          else if(typeof window.finishMeasure === 'function' && window.measuring && window.measuring.pts && window.measuring.pts.length >= 2) window.finishMeasure();
-        } catch(err) {}
-      }, 700);
-    }, {passive:true});
-    mapEl.addEventListener('touchmove', function(e){
-      if(!t || !e.touches || !e.touches.length) return;
-      var dx = Math.abs(e.touches[0].clientX - sx), dy = Math.abs(e.touches[0].clientY - sy);
-      if(dx > 14 || dy > 14){ clearTimeout(t); t = null; }
-    }, {passive:true});
-    ['touchend','touchcancel'].forEach(function(ev){ mapEl.addEventListener(ev, function(){ if(t){ clearTimeout(t); t = null; } }, {passive:true}); });
-  }
-  function biggerTouchTargets(){
-    var st = document.createElement('style');
-    st.id = 'sgs-touch-targets-runtime';
-    st.textContent = '@media (pointer: coarse){ .leaflet-marker-icon{transform-origin:center bottom;} .leaflet-div-icon{transform:scale(1.08);} .feature-label{font-size:12px!important;padding:2px 7px!important;} }';
-    document.head.appendChild(st);
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    preventDoubleTapZoom();
-    hardenMapTouch();
-    finishDrawOnLongPress();
-    biggerTouchTargets();
-  });
-})();
-</script>
-
-
-<style id="sgs-field-ready-mobile">
-@media (pointer: coarse) {
-  .topbtn, .tool { min-width: 48px !important; min-height: 48px !important; border-radius: 10px !important; }
-  #draw-finish, #draw-cancel, #geo-go, #locate-btn, #legend-btn, #labels-btn, #offline-btn { min-height: 46px !important; }
-  .leaflet-control-zoom a, .leaflet-control-layers-toggle { width: 42px !important; height: 42px !important; line-height: 42px !important; }
-}
-</style>
-<script>
-(function(){
-  var KEY = 'sgsmapper_field_autorestore_v1';
-  function safeState(){
-    try {
-      if(typeof window.state === 'undefined') return null;
-      return {
-        name: document.getElementById('project-name') ? document.getElementById('project-name').value : 'Proyecto',
-        state: window.state,
-        ts: Date.now()
-      };
-    } catch(e){ return null; }
-  }
-  function saveDraft(){
-    try {
-      var data = safeState();
-      if(!data) return;
-      localStorage.setItem(KEY, JSON.stringify(data));
-    } catch(e) {}
-  }
-  function restoreDraftPrompt(){
-    try {
-      if(typeof window.state === 'undefined') return;
-      var raw = localStorage.getItem(KEY);
-      if(!raw) return;
-      var data = JSON.parse(raw);
-      if(!data || !data.state) return;
-      var empty = !window.state.features || window.state.features.length === 0;
-      if(!empty) return;
-      if(confirm('Se ha encontrado una copia local automática. ¿Quieres recuperarla?')){
-        window.state = data.state;
-        var pn = document.getElementById('project-name');
-        if(pn && data.name) pn.value = data.name;
-        if(typeof window.renderAll === 'function') window.renderAll();
-        if(typeof window.fitAll === 'function') window.fitAll();
-      }
-    } catch(e) {}
-  }
-  function bindAutosave(){
-    ['click','change','input','touchend'].forEach(function(ev){
-      document.addEventListener(ev, function(){ clearTimeout(window.__sgsDraftT); window.__sgsDraftT = setTimeout(saveDraft, 500); }, {passive:true});
-    });
-    window.addEventListener('beforeunload', saveDraft);
-    document.addEventListener('visibilitychange', function(){ if(document.hidden) saveDraft(); });
-    window.addEventListener('pagehide', saveDraft);
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    bindAutosave();
-    setTimeout(restoreDraftPrompt, 900);
-  });
-})();
-</script>
-
-
-<style id="sgs-cross-platform-final">
-:root { --sgs-ui-min-btn: 42px; }
-html, body, #app { width: 100%; }
-body { overflow: hidden; }
-#app { max-width: 100vw; }
-#map { min-width: 0; }
-#editor, #legend-panel, aside.w-72 { overscroll-behavior: contain; }
-.leaflet-control-layers, .leaflet-popup-content-wrapper { max-width: min(92vw, 420px); }
-img { max-width: 100%; height: auto; }
-@media (pointer:fine) {
-  .topbtn, .tool, button { min-height: 34px; }
-  .field-input, input, textarea, select { font-size: 14px !important; }
-}
-@media (pointer:coarse) {
-  .topbtn, .tool, button { min-height: 46px; }
-  .field-input, input, textarea, select { font-size: 16px !important; }
-}
-@media (max-width: 1100px) {
-  aside.w-72 { position: absolute !important; left: 0; top: 0; bottom: 0; z-index: 1150; width: min(300px, 82vw) !important; }
-  #editor, #legend-panel { position: absolute !important; right: 0; top: 0; bottom: 0; width: min(380px, 92vw) !important; z-index: 1200; }
-}
-@media (min-width: 1101px) {
-  aside.w-72 { position: relative !important; width: 18rem !important; max-width: 24vw; }
-  #editor, #legend-panel { position: relative !important; width: 20rem !important; max-width: 28vw; }
-}
-</style>
-<script>
-(function(){
-  function byId(id){ return document.getElementById(id); }
-  function safe(fn){ try{ return fn(); }catch(e){} }
-  function setAppHeight(){
-    safe(function(){
-      var h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--app-height', h + 'px');
-    });
-  }
-  function bindResponsive(){
-    window.addEventListener('resize', setAppHeight, {passive:true});
-    window.addEventListener('orientationchange', setAppHeight, {passive:true});
-    if(window.visualViewport){
-      window.visualViewport.addEventListener('resize', setAppHeight, {passive:true});
-      window.visualViewport.addEventListener('scroll', setAppHeight, {passive:true});
-    }
-  }
-  function bindGlobalSafety(){
-    window.addEventListener('error', function(e){ try{ console.warn('SGS runtime error:', e.message); }catch(_){} });
-    document.addEventListener('click', function(e){
-      var a = e.target.closest ? e.target.closest('[data-photo]') : null;
-      if(a && typeof window.showPhoto === 'function'){ e.preventDefault(); window.showPhoto(a.getAttribute('data-photo')); }
-      var b = e.target.closest ? e.target.closest('.sgs-edit-trigger') : null;
-      if(b && typeof window.openEditor === 'function'){ e.preventDefault(); window.openEditor(b.getAttribute('data-id')); }
-    }, {passive:false});
-  }
-  function bindKeyboardEscape(){
-    document.addEventListener('keydown', function(e){
-      if(e.key !== 'Escape') return;
-      ['photo-modal','template-edit-modal','templates-modal','folder-modal','legend-panel','editor'].forEach(function(id){
-        var el = byId(id); if(el && !el.classList.contains('hidden')) { el.classList.remove('flex'); el.classList.add('hidden'); }
-      });
-    });
-  }
-  function ensureDesktopUsability(){
-    var pn = byId('project-name');
-    if(pn) pn.setAttribute('autocomplete','off');
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    setAppHeight();
-    bindResponsive();
-    bindGlobalSafety();
-    bindKeyboardEscape();
-    ensureDesktopUsability();
-  });
-})();
-</script>
-
-
-<style id="sgs-lock-screen-hotfix">
-html, body { margin:0 !important; padding:0 !important; overflow:hidden !important; }
-#lock-overlay {
-  position: fixed !important;
-  inset: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  height: var(--app-height, 100vh) !important;
-  display: none;
-  flex-direction: column !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 16px !important;
-  box-sizing: border-box !important;
-  background: rgba(42,44,46,.96) !important;
-  color: #fff !important;
-  z-index: 2147483000 !important;
-  overflow: auto !important;
-}
-#lock-overlay:not(.hidden) { display: flex !important; }
-#lock-overlay.hidden { display: none !important; }
-#lock-overlay * { max-width: 100% !important; box-sizing: border-box !important; }
-#lock-overlay .sgs-pass-input { width: min(340px, 86vw) !important; }
-#lock-overlay #lock-keys { width: min(340px, 86vw) !important; }
-#lock-overlay button { width: min(340px, 86vw) !important; }
-body.lock-active #app { visibility: hidden !important; pointer-events: none !important; }
-body.lock-active #lock-overlay { visibility: visible !important; pointer-events: auto !important; }
-body:not(.lock-active) #app { visibility: visible !important; pointer-events: auto !important; }
-</style>
-<script>
-(function(){
-  function setVH(){
-    try {
-      var h = (window.visualViewport && window.visualViewport.height) ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty('--app-height', h + 'px');
-    } catch(e){}
-  }
-  function syncLockState(){
-    try {
-      var ov = document.getElementById('lock-overlay');
-      if(!ov) return;
-      if(ov.classList.contains('hidden')) document.body.classList.remove('lock-active');
-      else document.body.classList.add('lock-active');
-    } catch(e){}
-  }
-  function observeLock(){
-    var ov = document.getElementById('lock-overlay');
-    if(!ov || !window.MutationObserver) return;
-    var mo = new MutationObserver(syncLockState);
-    mo.observe(ov, {attributes:true, attributeFilter:['class','style']});
-    syncLockState();
-  }
-  document.addEventListener('DOMContentLoaded', function(){ setVH(); observeLock(); syncLockState(); setTimeout(function(){ setVH(); syncLockState(); }, 200); });
-  window.addEventListener('resize', function(){ setVH(); syncLockState(); }, {passive:true});
-  window.addEventListener('orientationchange', function(){ setVH(); syncLockState(); }, {passive:true});
-  if(window.visualViewport){ window.visualViewport.addEventListener('resize', function(){ setVH(); syncLockState(); }, {passive:true}); }
-})();
-</script>
-
-
-<link rel="manifest" href="./manifest.webmanifest">
-<meta name="theme-color" content="#f97316">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="SGS Field Mapper">
-<link rel="apple-touch-icon" href="./icons/icon-192.png">
-<script>
-(function(){
-  if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')){
-    window.addEventListener('load', function(){ navigator.serviceWorker.register('./service-worker.js').catch(function(e){ console.warn('PWA service worker unavailable', e); }); });
-  }
-})();
-</script>
-
 </head>
 
 <body class="bg-sgs-panel text-sgs-dark">
@@ -972,7 +572,7 @@ document.getElementById('exp-confirm').onclick = async () => {
     });
     
     const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
-    fetch(dataUrl).then(r=>r.blob()).then(b=>sgsDownloadBlob(b, `SGS_Mapa_${new Date().getTime()}.jpg`));
+    saveAs(dataUrl, `SGS_Mapa_${new Date().getTime()}.jpg`);
     toast('JPG exportado correctamente.', 'success');
   } catch(err) {
     console.error(err);
@@ -1994,7 +1594,7 @@ function seedModel(){
   async function initExcel(){try{document.getElementById('excel-status').textContent='Cargando plantilla Excel adjunta…';wb=new ExcelJS.Workbook();await wb.xlsx.load(b64ToArrayBuffer(EXCEL_TEMPLATE_B64));excelChanges=JSON.parse(localStorage.getItem(EXCEL_AUTOSAVE_KEY)||'{}');applyChanges();const tabs=document.getElementById('excel-sheet-tabs');tabs.innerHTML='';wb.worksheets.forEach(ws=>{const b=document.createElement('button');b.className='excel-sheet-tab';b.textContent=ws.name;b.onclick=()=>{activeSheet=ws.name;renderExcel();};tabs.appendChild(b);});activeSheet=wb.worksheets[0]?.name;wbReady=true;renderExcel();document.getElementById('excel-status').textContent='Plantilla cargada. Cambios con autoguardado local.';}catch(e){console.error(e);document.getElementById('excel-status').textContent='Error cargando el Excel.';toast('Error cargando la plantilla Excel.','error');}}
   function key(s,a){return s+'!'+a;}function applyChanges(){if(!wb)return;Object.entries(excelChanges).forEach(([k,v])=>{const i=k.indexOf('!');if(i<0)return;const ws=wb.getWorksheet(k.slice(0,i));if(ws)ws.getCell(k.slice(i+1)).value=parseVal(v);});}function parseVal(v){if(v===null||v===undefined||v==='')return '';const s=String(v).trim();if(/^[-+]?\d+([\.,]\d+)?$/.test(s))return Number(s.replace(',','.'));return v;}function colName(n){let s='';while(n>0){let m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-m)/26);}return s;}function escHtml(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}function cellText(cell){const v=cell.value;if(v==null)return '';if(typeof v==='object'){if(v.text)return v.text;if(v.result!==undefined)return v.result;if(v.formula)return '='+v.formula;if(v.richText)return v.richText.map(r=>r.text).join('');if(v.hyperlink)return v.text||v.hyperlink;}return v;}function argb(c){if(!c)return null;let a=c.argb||c.rgb;if(!a)return null;a=String(a).replace('#','');if(a.length===8)a=a.slice(2);if(a.length!==6)return null;return '#'+a;}function borderCss(b){if(!b)return '';const color=argb(b.color)||'#d9d9d9';return `1px solid ${color}`;}function cssCell(cell){const s=cell.style||{},css=[];if(s.fill&&s.fill.fgColor){const c=argb(s.fill.fgColor);if(c)css.push('background:'+c);}if(s.font){if(s.font.bold)css.push('font-weight:700');if(s.font.italic)css.push('font-style:italic');if(s.font.size)css.push('font-size:'+s.font.size+'pt');if(s.font.name)css.push('font-family:'+s.font.name+', Barlow, Arial, sans-serif');const fc=argb(s.font.color);if(fc)css.push('color:'+fc);}if(s.alignment){if(s.alignment.horizontal)css.push('text-align:'+({center:'center',right:'right',left:'left'}[s.alignment.horizontal]||s.alignment.horizontal));if(s.alignment.vertical)css.push('vertical-align:'+({middle:'middle',top:'top',bottom:'bottom'}[s.alignment.vertical]||s.alignment.vertical));if(s.alignment.wrapText)css.push('white-space:pre-wrap');}if(s.border){if(s.border.top)css.push('border-top:'+borderCss(s.border.top));if(s.border.right)css.push('border-right:'+borderCss(s.border.right));if(s.border.bottom)css.push('border-bottom:'+borderCss(s.border.bottom));if(s.border.left)css.push('border-left:'+borderCss(s.border.left));}return css.join(';');}function merges(ws){const arr=[];const m=ws._merges||{};Object.values(m).forEach(x=>{const r=x.model||x;if(r&&r.top)arr.push(r);});return arr;}function mergeAt(list,r,c){return list.find(m=>m.top===r&&m.left===c);}function covered(list,r,c){return list.some(m=>r>=m.top&&r<=m.bottom&&c>=m.left&&c<=m.right&&!(r===m.top&&c===m.left));}
   function renderExcel(){const ws=wb?.getWorksheet(activeSheet);if(!ws)return;document.querySelectorAll('.excel-sheet-tab').forEach(b=>b.classList.toggle('active',b.textContent===activeSheet));const table=document.getElementById('excel-grid');table.innerHTML='';const maxRows=Math.max(ws.rowCount||ws.actualRowCount||1,40),maxCols=Math.max(ws.columnCount||ws.actualColumnCount||1,16),ml=merges(ws);let html='<colgroup><col style="width:42px">';for(let c=1;c<=maxCols;c++){const w=ws.getColumn(c).width;html+=`<col style="width:${Math.max(45,Math.round((w||12)*7.2))}px">`;}html+='</colgroup><thead><tr><th class="corner"></th>';for(let c=1;c<=maxCols;c++)html+=`<th class="col-head">${colName(c)}</th>`;html+='</tr></thead><tbody>';for(let r=1;r<=maxRows;r++){const rh=ws.getRow(r).height;html+=`<tr style="height:${rh?Math.round(rh*1.333):24}px"><th class="row-head">${r}</th>`;for(let c=1;c<=maxCols;c++){if(covered(ml,r,c))continue;const addr=colName(c)+r,cell=ws.getCell(r,c),mk=mergeAt(ml,r,c),rs=mk?mk.bottom-mk.top+1:1,cs=mk?mk.right-mk.left+1:1,k=key(ws.name,addr),changed=excelChanges[k]!==undefined,val=changed?excelChanges[k]:cellText(cell);html+=`<td class="excel-cell ${changed?'changed':''}" data-addr="${addr}" ${rs>1?`rowspan="${rs}"`:''} ${cs>1?`colspan="${cs}"`:''} style="${cssCell(cell)}"><div class="excel-cell-inner" contenteditable="true" spellcheck="false">${escHtml(val)}</div></td>`;}html+='</tr>';}html+='</tbody>';table.innerHTML=html;table.querySelectorAll('.excel-cell-inner').forEach(div=>{div.addEventListener('input',()=>{const td=div.closest('td'),addr=td.dataset.addr,k=key(ws.name,addr);excelChanges[k]=div.innerText;td.classList.add('changed');ws.getCell(addr).value=parseVal(div.innerText);clearTimeout(window.__excelAutoSaveTimer);window.__excelAutoSaveTimer=setTimeout(()=>saveExcel(false),500);});div.addEventListener('touchstart',e=>e.stopPropagation(),{passive:true});});}
-  async function exportFilledExcel(){if(!wbReady)await initExcel();if(!wb)return;applyChanges();saveExcel(false);const buf=await wb.xlsx.writeBuffer();sgsDownloadBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`023_RA_XXXXXX_CLIENTE_rellenado_${new Date().toISOString().slice(0,10)}.xlsx`);toast('Excel exportado manteniendo la plantilla original.','success');}
+  async function exportFilledExcel(){if(!wbReady)await initExcel();if(!wb)return;applyChanges();saveExcel(false);const buf=await wb.xlsx.writeBuffer();saveAs(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`023_RA_XXXXXX_CLIENTE_rellenado_${new Date().toISOString().slice(0,10)}.xlsx`);toast('Excel exportado manteniendo la plantilla original.','success');}
 
   /* Mapa final editable */
   function esc(s){return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -2009,7 +1609,7 @@ function seedModel(){
   function buildFinal(editable=true){addCss();clearFinal();const mapEl=document.getElementById('map');const title=document.getElementById('exp-chk-title')?.checked,legend=document.getElementById('exp-chk-legend')?.checked,scale=document.getElementById('exp-chk-scale')?.checked,compass=document.getElementById('exp-chk-compass')?.checked,titleText=document.getElementById('exp-title-text')?.value||document.getElementById('project-name')?.value||'Mapa';if(title)panel('title',`<div ${editable?'contenteditable="true"':''}>${esc(titleText)}</div>`,{left:'12px',top:'12px',width:'270px'},editable);if(legend){const lh=layerLegend(),ph=pointLegend(editable);if(lh||ph){const le=panel('legend',lh+ph,{left:Math.max(12,mapEl.clientWidth-300)+'px',top:'12px',width:'280px'},editable);le.querySelectorAll('.final-map-color').forEach(inp=>inp.addEventListener('input',e=>{const row=e.target.closest('.final-map-legend-row'),fid=row?.dataset.folder,f=getFolder(fid),rep=state.features.find(ft=>ft.folderId===fid)||{};if(f)f.color=e.target.value;row.querySelector('.final-map-legend-symbol').innerHTML=sym(rep.type||'point',row.querySelector('.final-map-shape')?.value||rep.shape||f?.shape||'pin',e.target.value,rep.fillOpacity??0.35);}));le.querySelectorAll('.final-map-shape').forEach(sel=>sel.addEventListener('change',e=>{const row=e.target.closest('.final-map-legend-row'),fid=row?.dataset.folder,f=getFolder(fid),rep=state.features.find(ft=>ft.folderId===fid)||{},color=row.querySelector('.final-map-color')?.value||rep.color||f?.color||'#F36F21';row.querySelector('.final-map-legend-symbol').innerHTML=sym('point',e.target.value,color,rep.fillOpacity??0.35);}));}}
     if(scale){const sp=panel('scale',scaleHtml(140),{left:'14px',top:Math.max(60,mapEl.clientHeight-92)+'px',width:'178px',height:'58px'},editable);finalScaleUpdater=()=>{const b=sp.querySelector('.final-map-body');if(b)b.innerHTML=scaleHtml(140);};map.on('zoomend moveend',finalScaleUpdater);}if(compass)panel('compass','<svg width="36" height="50" viewBox="0 0 30 42" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 1L28 21L15 41L2 21L15 1Z" fill="#2A2C2E" opacity="0.96"/><path d="M15 1L28 21H15V1Z" fill="#F36F21"/><text x="15" y="27" fill="white" font-size="11" font-family="Arial" font-weight="700" text-anchor="middle">N</text></svg>',{left:Math.max(12,mapEl.clientWidth-78)+'px',top:Math.max(60,mapEl.clientHeight-110)+'px',width:'58px',height:'72px'},editable);}
   function openExportFixed(){try{if(typeof openExportModal==='function')openExportModal();}catch(e){console.warn(e);document.getElementById('export-modal')?.classList.replace('hidden','flex');}document.getElementById('export-modal')?.classList.replace('hidden','flex');}
-  async function exportJpgFixed(){if(typeof html2canvas!=='function'){toast('No se ha cargado html2canvas. Revise conexión/CDN autorizado por IT.','error');return;}const had=finalEls.length>0;if(!had)buildFinal(false);document.getElementById('export-modal')?.classList.replace('flex','hidden');const hidden=[];try{toast('Preparando JPG final…','info');document.body.classList.add('exporting-jpg');['.leaflet-control-zoom','.leaflet-control-layers','.leaflet-control-attribution','#draw-hint','#ign-opacity'].forEach(sel=>document.querySelectorAll(sel).forEach(el=>{hidden.push({el,display:el.style.display});el.style.display='none';}));document.querySelectorAll('#map > .absolute, #map ~ div.absolute').forEach(el=>{hidden.push({el,display:el.style.display});el.style.display='none';});await new Promise(r=>setTimeout(r,700));map.invalidateSize(false);const canvas=await html2canvas(document.getElementById('map'),{useCORS:true,allowTaint:false,logging:false,backgroundColor:'#ffffff',scale:2,imageTimeout:15000});const blob=await new Promise(res=>canvas.toBlob(res,'image/jpeg',0.95));if(!blob)throw new Error('Blob vacío');const safe=(document.getElementById('project-name')?.value||'Mapa').replace(/[\\/:*?"<>|]+/g,'_').trim();sgsDownloadBlob(blob,`SGS_Mapa_${safe}_${new Date().toISOString().slice(0,10)}.jpg`);toast('JPG final exportado correctamente.','success');}catch(e){console.error(e);toast('Error al exportar JPG. Revisa CORS de la capa base o cambia de capa.','error');}finally{document.body.classList.remove('exporting-jpg');hidden.forEach(x=>x.el.style.display=x.display);try{clearFinal();}catch(_e){}map.invalidateSize(false);}}
+  async function exportJpgFixed(){if(typeof html2canvas!=='function'){toast('No se ha cargado html2canvas. Revise conexión/CDN autorizado por IT.','error');return;}const had=finalEls.length>0;if(!had)buildFinal(false);document.getElementById('export-modal')?.classList.replace('flex','hidden');const hidden=[];try{toast('Preparando JPG final…','info');document.body.classList.add('exporting-jpg');['.leaflet-control-zoom','.leaflet-control-layers','.leaflet-control-attribution','#draw-hint','#ign-opacity'].forEach(sel=>document.querySelectorAll(sel).forEach(el=>{hidden.push({el,display:el.style.display});el.style.display='none';}));document.querySelectorAll('#map > .absolute, #map ~ div.absolute').forEach(el=>{hidden.push({el,display:el.style.display});el.style.display='none';});await new Promise(r=>setTimeout(r,700));map.invalidateSize(false);const canvas=await html2canvas(document.getElementById('map'),{useCORS:true,allowTaint:false,logging:false,backgroundColor:'#ffffff',scale:2,imageTimeout:15000});const blob=await new Promise(res=>canvas.toBlob(res,'image/jpeg',0.95));if(!blob)throw new Error('Blob vacío');const safe=(document.getElementById('project-name')?.value||'Mapa').replace(/[\\/:*?"<>|]+/g,'_').trim();if(typeof saveAs==='function'){saveAs(blob,`SGS_Mapa_${safe}_${new Date().toISOString().slice(0,10)}.jpg`);}else{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`SGS_Mapa_${safe}_${new Date().toISOString().slice(0,10)}.jpg`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1000);}toast('JPG final exportado correctamente.','success');}catch(e){console.error(e);toast('Error al exportar JPG. Revisa CORS de la capa base o cambia de capa.','error');}finally{document.body.classList.remove('exporting-jpg');hidden.forEach(x=>x.el.style.display=x.display);try{clearFinal();}catch(_e){}map.invalidateSize(false);}}
   function wireFinalMap(){addCss();const edit=document.getElementById('exp-edit-final');if(edit)edit.onclick=()=>{document.getElementById('export-modal')?.classList.replace('flex','hidden');buildFinal(true);toast('Modo edición de mapa final activo. Arrastra, redimensiona y edita cada bloque sobre el mapa.','info');};const confirm=document.getElementById('exp-confirm');if(confirm)confirm.onclick=exportJpgFixed;document.querySelectorAll('[data-act="jpg"]').forEach(b=>b.onclick=openExportFixed);}
   setTimeout(()=>{wireFinalMap();},0);
   window.__sgsV16Audit={buildFinal,clearFinal,wireFinalMap,openExportFixed,exportJpgFixed};
@@ -2047,10 +1647,10 @@ document.addEventListener('keydown',e=>{
 
 /* ============================================================
    SEGURIDAD · CONTRASEÑA ALFANUMÉRICA + CIFRADO LOCAL
-   Contraseña obligatoria al abrir. Sin contraseña universal. .
+   Contraseña obligatoria al abrir. Sin contraseña universal.
    WebCrypto AES-GCM + PBKDF2 SHA-256, 310.000 iteraciones.
    ============================================================ */
-const LS_KEY='sgs_mapper_v16_11_secure_android_pc';
+const LS_KEY='sgs_mapper_v16_9_secure_jpg_autoclean';
 const PASS_RE=/^[A-Z0-9]{6}$/;
 const VERIFIER_KEY=LS_KEY+'_verifier';
 const VERIFIER_TEXT='SGS_FIELD_MAPPER_V16_LOCAL_VERIFIER';
@@ -2063,24 +1663,124 @@ async function deriveKey(pass,salt){
 }
 function b64enc(buf){return btoa(String.fromCharCode(...new Uint8Array(buf)));}
 function b64dec(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
-function ensureSalt(){let s=localStorage.getItem(LS_KEY+'_salt');if(s)return b64dec(s);const salt=window.crypto.getRandomValues(new Uint8Array(16));localStorage.setItem(LS_KEY+'_salt',b64enc(salt));return salt;}
-async function storeVerifier(){const iv=window.crypto.getRandomValues(new Uint8Array(12));const data=new TextEncoder().encode(VERIFIER_TEXT);const ct=await subtle.encrypt({name:'AES-GCM',iv},cryptoKey,data);localStorage.setItem(VERIFIER_KEY,JSON.stringify({iv:b64enc(iv),ct:b64enc(ct),v:1,created:Date.now()}));}
-async function verifyPassword(pass){if(!subtle)return false;const raw=localStorage.getItem(VERIFIER_KEY);if(!raw)return false;const key=await deriveKey(pass,ensureSalt());const o=JSON.parse(raw);const pt=await subtle.decrypt({name:'AES-GCM',iv:b64dec(o.iv)},key,b64dec(o.ct));const ok=new TextDecoder().decode(pt)===VERIFIER_TEXT;if(ok)cryptoKey=key;return ok;}
+function ensureSalt(){
+  let s=localStorage.getItem(LS_KEY+'_salt');
+  if(s)return b64dec(s);
+  const salt=window.crypto.getRandomValues(new Uint8Array(16));
+  localStorage.setItem(LS_KEY+'_salt',b64enc(salt));
+  return salt;
+}
+async function storeVerifier(){
+  const iv=window.crypto.getRandomValues(new Uint8Array(12));
+  const data=new TextEncoder().encode(VERIFIER_TEXT);
+  const ct=await subtle.encrypt({name:'AES-GCM',iv},cryptoKey,data);
+  localStorage.setItem(VERIFIER_KEY,JSON.stringify({iv:b64enc(iv),ct:b64enc(ct),v:1,created:Date.now()}));
+}
+async function verifyPassword(pass){
+  if(!subtle)return false;
+  const raw=localStorage.getItem(VERIFIER_KEY);
+  if(!raw)return false;
+  const key=await deriveKey(pass,ensureSalt());
+  const o=JSON.parse(raw);
+  const pt=await subtle.decrypt({name:'AES-GCM',iv:b64dec(o.iv)},key,b64dec(o.ct));
+  const ok=new TextDecoder().decode(pt)===VERIFIER_TEXT;
+  if(ok)cryptoKey=key;
+  return ok;
+}
 function hasVerifier(){return !!localStorage.getItem(VERIFIER_KEY);}
-async function unlockWithPassword(pass){if(!subtle){throw new Error('WebCrypto no disponible. Abra la aplicación desde HTTPS, SharePoint o navegador compatible.');}if(!hasVerifier()){cryptoKey=await deriveKey(pass,ensureSalt());await storeVerifier();appUnlocked=true;return true;}const ok=await verifyPassword(pass);appUnlocked=ok;return ok;}
-async function encryptAndStore(){if(!appUnlocked)return;if(!cryptoKey||!subtle)throw new Error('Cifrado no inicializado');const iv=window.crypto.getRandomValues(new Uint8Array(12));const data=new TextEncoder().encode(JSON.stringify({name:projectName(),...state}));const ct=await subtle.encrypt({name:'AES-GCM',iv},cryptoKey,data);localStorage.setItem(LS_KEY,JSON.stringify({iv:b64enc(iv),ct:b64enc(ct)}));localStorage.setItem(LS_KEY+'_meta',JSON.stringify({encrypted:true,lastSave:Date.now(),securityProfile:'v16.11-android-pc-no-backdoor'}));}
-function saveLocalPlain(){console.warn('Guardado en claro bloqueado por perfil seguro v16.11');toast('Guardado en claro bloqueado por seguridad. Configure contraseña válida.','error');}
-async function loadLocal(){const raw=localStorage.getItem(LS_KEY);if(!raw)return false;const meta=JSON.parse(localStorage.getItem(LS_KEY+'_meta')||'{}');try{if(meta.encrypted){if(!cryptoKey)return false;const o=JSON.parse(raw);const pt=await subtle.decrypt({name:'AES-GCM',iv:b64dec(o.iv)},cryptoKey,b64dec(o.ct));applyLoadedState(JSON.parse(new TextDecoder().decode(pt)));}else{applyLoadedState(JSON.parse(raw));await encryptAndStore();}return true;}catch(e){console.warn('load/decrypt failed',e);return false;}}
+async function unlockWithPassword(pass){
+  if(!subtle){throw new Error('WebCrypto no disponible. Abra la aplicación desde HTTPS, SharePoint o navegador compatible.');}
+  if(!hasVerifier()){
+    cryptoKey=await deriveKey(pass,ensureSalt());
+    await storeVerifier();
+    appUnlocked=true;
+    return true;
+  }
+  const ok=await verifyPassword(pass);
+  appUnlocked=ok;
+  return ok;
+}
+async function encryptAndStore(){
+  if(!appUnlocked)return;
+  if(!cryptoKey||!subtle)throw new Error('Cifrado no inicializado');
+  const iv=window.crypto.getRandomValues(new Uint8Array(12));
+  const data=new TextEncoder().encode(JSON.stringify({name:projectName(),...state}));
+  const ct=await subtle.encrypt({name:'AES-GCM',iv},cryptoKey,data);
+  localStorage.setItem(LS_KEY,JSON.stringify({iv:b64enc(iv),ct:b64enc(ct)}));
+  localStorage.setItem(LS_KEY+'_meta',JSON.stringify({encrypted:true,lastSave:Date.now(),securityProfile:'v16.10-no-backdoor'}));
+}
+function saveLocalPlain(){
+  console.warn('Guardado en claro bloqueado por perfil seguro v16.10');
+  toast('Guardado en claro bloqueado por seguridad. Configure contraseña válida.','error');
+}
+async function loadLocal(){
+  const raw=localStorage.getItem(LS_KEY);
+  if(!raw)return false;
+  const meta=JSON.parse(localStorage.getItem(LS_KEY+'_meta')||'{}');
+  try{
+    if(meta.encrypted){
+      if(!cryptoKey)return false;
+      const o=JSON.parse(raw);
+      const pt=await subtle.decrypt({name:'AES-GCM',iv:b64dec(o.iv)},cryptoKey,b64dec(o.ct));
+      applyLoadedState(JSON.parse(new TextDecoder().decode(pt)));
+    }else{
+      applyLoadedState(JSON.parse(raw));
+      await encryptAndStore();
+    }
+    return true;
+  }catch(e){console.warn('load/decrypt failed',e);return false;}
+}
 function applyLoadedState(d){state={folders:d.folders||[],features:d.features||[],activeFolderId:d.activeFolderId||(d.folders&&d.folders[0]?.id)||null};document.getElementById('project-name').value=d.name||'Proyecto';}
 let saveTimer=null;function scheduleAutoSave(){clearTimeout(saveTimer);saveTimer=setTimeout(()=>{encryptAndStore().catch(err=>console.warn(err));},800);}
 let pinBuffer='', pinMode='unlock', pendingNewPin='';
 function pinHasStored(){return hasVerifier();}
 function normalizePass(v){return String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,6);}
 function validPass(v){return PASS_RE.test(String(v||'').toUpperCase());}
-function renderPinPad(){const firstRun=!hasVerifier();const keys=document.getElementById('lock-keys');keys.className='sgs-pass-mode';keys.innerHTML=`<input id="sgs-pass-input" class="sgs-pass-input" type="password" inputmode="text" autocomplete="off" maxlength="6" placeholder="------"><div class="sgs-pass-actions"><button id="sgs-pass-ok" class="sgs-pass-primary">${firstRun?'Crear contraseña':'Acceder'}</button><button id="sgs-pass-clear" class="sgs-pass-secondary">Borrar</button></div><div class="sgs-pass-help">${firstRun?'Primer uso: defina una contraseña alfanumérica local de 6 caracteres. No existe contraseña universal ni puerta trasera.':'Introduzca la contraseña local configurada para este dispositivo. No existe contraseña universal.'}</div>`;const inp=document.getElementById('sgs-pass-input');inp.value=pinBuffer;inp.addEventListener('input',e=>{pinBuffer=normalizePass(e.target.value);e.target.value=pinBuffer;renderPinDots();});inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tryPin();}});document.getElementById('sgs-pass-ok').onclick=()=>tryPin();document.getElementById('sgs-pass-clear').onclick=()=>{pinBuffer='';inp.value='';renderPinDots();inp.focus();};setTimeout(()=>inp.focus(),80);}
+function renderPinPad(){
+  const firstRun=!hasVerifier();
+  const keys=document.getElementById('lock-keys');
+  keys.className='sgs-pass-mode';
+  keys.innerHTML=`<input id="sgs-pass-input" class="sgs-pass-input" type="password" inputmode="text" autocomplete="off" maxlength="6" placeholder="------"><div class="sgs-pass-actions"><button id="sgs-pass-ok" class="sgs-pass-primary">${firstRun?'Crear contraseña':'Acceder'}</button><button id="sgs-pass-clear" class="sgs-pass-secondary">Borrar</button></div><div class="sgs-pass-help">${firstRun?'Primer uso: defina una contraseña alfanumérica local de 6 caracteres. No existe contraseña universal ni puerta trasera.':'Introduzca la contraseña local configurada para este dispositivo. No existe contraseña universal.'}</div>`;
+  const inp=document.getElementById('sgs-pass-input');
+  inp.value=pinBuffer;
+  inp.addEventListener('input',e=>{pinBuffer=normalizePass(e.target.value);e.target.value=pinBuffer;renderPinDots();});
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();tryPin();}});
+  document.getElementById('sgs-pass-ok').onclick=()=>tryPin();
+  document.getElementById('sgs-pass-clear').onclick=()=>{pinBuffer='';inp.value='';renderPinDots();inp.focus();};
+  setTimeout(()=>inp.focus(),80);
+}
 function renderPinDots(){const d=document.getElementById('lock-dots');d.innerHTML='';for(let i=0;i<6;i++){const dot=document.createElement('div');dot.className='pin-dot'+(i<pinBuffer.length?' filled':'');d.appendChild(dot);}}
-async function tryPin(){const msg=document.getElementById('lock-msg');const pass=normalizePass(pinBuffer);pinBuffer=pass;const inp=document.getElementById('sgs-pass-input');if(inp)inp.value=pinBuffer;renderPinDots();if(!validPass(pass)){msg.textContent='Debe tener exactamente 6 caracteres alfanuméricos.';return;}const firstRun=!hasVerifier();try{const ok=await unlockWithPassword(pass);if(!ok){throw new Error('Contraseña incorrecta.');}const loaded=await loadLocal();if(!loaded){seedModel();clearDefaultFeaturesV14();renderAll();}else{renderAll();fitAll();}closeLock();toast(firstRun?'Contraseña creada y aplicación cifrada.':'Aplicación desbloqueada.','success');try{window.__sgsSetAppHeight&&window.__sgsSetAppHeight();}catch(_e){}}catch(e){console.warn(e);msg.textContent=e.message||'Contraseña incorrecta.';pinBuffer='';renderPinPad();renderPinDots();}}
-function showLock(mode){pinMode=mode||'unlock';pinBuffer='';pendingNewPin='';document.getElementById('lock-title').textContent=hasVerifier()?'Contraseña de acceso':'Crear contraseña local';document.getElementById('lock-msg').textContent='';document.getElementById('lock-reset').classList.toggle('hidden',false);document.getElementById('lock-overlay').classList.replace('hidden','flex');document.getElementById('app').style.filter='blur(8px)';renderPinPad();renderPinDots();}
+async function tryPin(){
+  const msg=document.getElementById('lock-msg');
+  const pass=normalizePass(pinBuffer);
+  pinBuffer=pass;
+  const inp=document.getElementById('sgs-pass-input');if(inp)inp.value=pinBuffer;
+  renderPinDots();
+  if(!validPass(pass)){msg.textContent='Debe tener exactamente 6 caracteres alfanuméricos.';return;}
+  const firstRun=!hasVerifier();
+  try{
+    const ok=await unlockWithPassword(pass);
+    if(!ok){throw new Error('Contraseña incorrecta.');}
+    const loaded=await loadLocal();
+    if(!loaded){seedModel();clearDefaultFeaturesV14();renderAll();}
+    else{renderAll();fitAll();}
+    closeLock();
+    toast(firstRun?'Contraseña creada y aplicación cifrada.':'Aplicación desbloqueada.','success');
+  }catch(e){
+    console.warn(e);
+    msg.textContent=e.message||'Contraseña incorrecta.';
+    pinBuffer='';renderPinPad();renderPinDots();
+  }
+}
+function showLock(mode){
+  pinMode=mode||'unlock';pinBuffer='';pendingNewPin='';
+  document.getElementById('lock-title').textContent=hasVerifier()?'Contraseña de acceso':'Crear contraseña local';
+  document.getElementById('lock-msg').textContent='';
+  document.getElementById('lock-reset').classList.toggle('hidden',false);
+  document.getElementById('lock-overlay').classList.replace('hidden','flex');
+  document.getElementById('app').style.filter='blur(8px)';
+  renderPinPad();renderPinDots();
+}
 function closeLock(){document.getElementById('lock-overlay').classList.replace('flex','hidden');document.getElementById('app').style.filter='';}
 document.getElementById('lock-reset').onclick=()=>{if(!confirm('Esto borrará la contraseña local y los datos cifrados guardados en este dispositivo. ¿Continuar?'))return;localStorage.removeItem(LS_KEY);localStorage.removeItem(LS_KEY+'_salt');localStorage.removeItem(LS_KEY+'_meta');localStorage.removeItem(VERIFIER_KEY);cryptoKey=null;appUnlocked=false;toast('Contraseña y datos locales borrados.','info');showLock('unlock');};
 function openPinMenu(){alert('La aplicación usa contraseña local alfanumérica de 6 caracteres, derivación PBKDF2-SHA256 con 310.000 iteraciones y cifrado AES-GCM. No existe contraseña universal ni puerta trasera.');}
@@ -2209,6 +1909,88 @@ document.getElementById('off-start').onclick=downloadOffline;
 document.getElementById('off-clear').onclick=clearTileCache;
 map.on('moveend zoomend baselayerchange',refreshOfflineStats);
 
+/* ============================================================
+   REFUERZO v16.1 · Nuevo proyecto con plantilla SGS y validación
+   ============================================================ */
+function sgsText(value, fallback=''){
+  return typeof value==='string' ? value.slice(0,5000) : fallback;
+}
+function sgsCoords(type, coords){
+  if(!Array.isArray(coords)) return null;
+  const out=coords.map(c=>({lat:Number(c&&c.lat),lon:Number(c&&c.lon)}))
+    .filter(c=>Number.isFinite(c.lat)&&Number.isFinite(c.lon)&&Math.abs(c.lat)<=90&&Math.abs(c.lon)<=180);
+  const min=type==='area'?3:type==='line'?2:1;
+  return out.length>=min ? (type==='point'?[out[0]]:out) : null;
+}
+function sgsCleanFields(fields){
+  return Array.isArray(fields) ? fields.slice(0,80).map((f,i)=>({
+    id:sgsText(f&&f.id,uid()), name:sgsText(f&&f.name,'Campo '+(i+1)).slice(0,120),
+    type:f&&f.type==='choice'?'choice':'text',
+    choices:Array.isArray(f&&f.choices)?f.choices.slice(0,40).map(x=>sgsText(x).slice(0,120)).filter(Boolean):[]
+  })) : [];
+}
+function sgsNormalizeProject(data){
+  const raw=data&&typeof data==='object'?data:{};
+  const rawFolders=Array.isArray(raw.folders)?raw.folders:[];
+  const seen=new Set();
+  const folders=rawFolders.slice(0,300).map((f,i)=>{
+    let id=sgsText(f&&f.id,uid()); while(seen.has(id)) id=uid(); seen.add(id);
+    return {id,name:sgsText(f&&f.name,'Carpeta '+(i+1)).slice(0,160),parentId:null,
+      color:/^#[0-9a-f]{6}$/i.test(sgsText(f&&f.color))?f.color:'#F36F21',
+      shape:['pin','circle','square','triangle','diamond'].includes(f&&f.shape)?f.shape:'pin',
+      fields:sgsCleanFields(f&&f.fields),collapsed:!!(f&&f.collapsed),
+      fillColor:/^#[0-9a-f]{6}$/i.test(sgsText(f&&f.fillColor))?f.fillColor:undefined,
+      fillOpacity:Number.isFinite(Number(f&&f.fillOpacity))?Math.max(0,Math.min(1,Number(f.fillOpacity))):undefined};
+  });
+  const folderIds=new Set(folders.map(f=>f.id));
+  rawFolders.slice(0,folders.length).forEach((f,i)=>{const p=sgsText(f&&f.parentId); if(p&&p!==folders[i].id&&folderIds.has(p)) folders[i].parentId=p;});
+  const features=(Array.isArray(raw.features)?raw.features:[]).slice(0,5000).map((ft,i)=>{
+    const type=['point','line','area'].includes(ft&&ft.type)?ft.type:'point';
+    const folderId=sgsText(ft&&ft.folderId); const coords=sgsCoords(type,ft&&ft.coords);
+    if(!folderIds.has(folderId)||!coords) return null;
+    return {id:sgsText(ft&&ft.id,uid()),folderId,type,name:sgsText(ft&&ft.name,'Sin nombre').slice(0,250),
+      description:sgsText(ft&&ft.description),coords,fields:ft&&typeof ft.fields==='object'&&!Array.isArray(ft.fields)?ft.fields:{},
+      images:Array.isArray(ft&&ft.images)?ft.images.filter(x=>typeof x==='string'&&x.startsWith('data:image/')).slice(0,30):[],
+      color:/^#[0-9a-f]{6}$/i.test(sgsText(ft&&ft.color))?ft.color:undefined,
+      fillColor:/^#[0-9a-f]{6}$/i.test(sgsText(ft&&ft.fillColor))?ft.fillColor:undefined,
+      fillOpacity:Number.isFinite(Number(ft&&ft.fillOpacity))?Math.max(0,Math.min(1,Number(ft.fillOpacity))):undefined,
+      strokeColor:/^#[0-9a-f]{6}$/i.test(sgsText(ft&&ft.strokeColor))?ft.strokeColor:undefined};
+  }).filter(Boolean);
+  const active=folderIds.has(raw.activeFolderId)?raw.activeFolderId:(folders[0]&&folders[0].id)||null;
+  return {name:sgsText(raw.name,'Proyecto sin título').slice(0,160),folders,features,activeFolderId:active};
+}
+function sgsApplyProject(data){
+  const clean=sgsNormalizeProject(data);
+  state={folders:clean.folders,features:clean.features,activeFolderId:clean.activeFolderId};
+  document.getElementById('project-name').value=clean.name;
+}
+function sgsNewTemplate(){
+  state={folders:[],features:[],activeFolderId:null};
+  seedModel();
+  clearDefaultFeaturesV14();
+  state.activeFolderId=state.folders[0]?.id||null;
+  document.getElementById('project-name').value='Proyecto sin título';
+}
+/* Sobrescribe apertura y carga local: no admite geometrías huérfanas o inválidas. */
+openProject=function(file){
+  if(!file) return;
+  if(file.size>80*1024*1024){toast('El proyecto supera el tamaño máximo permitido (80 MB).','error');return;}
+  const r=new FileReader();
+  r.onload=()=>{try{sgsApplyProject(JSON.parse(r.result));closeEditor();cancelDraw();cancelMeasure();renderAll();fitAll();toast('Proyecto cargado y validado.','success');}catch(e){console.warn(e);toast('Archivo de proyecto no válido.','error');}};
+  r.onerror=()=>toast('No se pudo leer el archivo.','error'); r.readAsText(file);
+};
+applyLoadedState=function(data){sgsApplyProject(data);};
+newProject=function(){
+  const hasData=state.folders.length||state.features.length;
+  if(hasData&&!confirm('Se creará un proyecto nuevo con la plantilla SGS. Se eliminarán del espacio de trabajo actual los puntos, áreas y recorridos no exportados. ¿Continuar?')) return;
+  if(hasData&&!confirm('Confirmación final: guarda primero el proyecto si quieres conservarlo. ¿Crear la nueva plantilla SGS?')) return;
+  closeEditor();cancelDraw();cancelMeasure();
+  sgsNewTemplate();renderAll();fitAll();scheduleAutoSave();
+  toast('Proyecto nuevo creado con la estructura SGS de carpetas y tipos de punto.','success');
+};
+/* Autoguardado también al cambiar el nombre del proyecto. */
+document.getElementById('project-name').addEventListener('input',()=>scheduleAutoSave());
+
 /* arrancar */
 const _origRenderAll=renderAll;
 renderAll=function(){_origRenderAll();scheduleAutoSave();};
@@ -2259,462 +2041,51 @@ function toast(msg,type='info'){
 })();
 
 </script>
+<!-- Modal de advertencia para proyecto nuevo -->
+<div id="new-project-modal" class="hidden fixed inset-0 z-[10000] items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="new-project-title">
+  <div class="absolute inset-0 bg-sgs-dark/70" data-new-project-close></div>
+  <div class="relative w-full max-w-lg rounded-xl bg-white shadow-2xl overflow-hidden">
+    <div class="h-1.5 sgs-stripe"></div>
+    <div class="p-6">
+      <div class="flex items-start gap-4">
+        <div class="shrink-0 w-11 h-11 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold">!</div>
+        <div>
+          <h2 id="new-project-title" class="font-cond text-xl font-700 uppercase text-sgs-dark">Crear proyecto nuevo</h2>
+          <p class="mt-2 text-sm leading-relaxed text-sgs-gray">Se eliminarán del espacio de trabajo actual todas las carpetas, puntos, áreas, líneas, fotografías y datos que no hayan sido guardados.</p>
+          <p class="mt-3 text-sm font-700 text-sgs-dark">Antes de continuar, utiliza <span class="text-sgs-orange">Guardar proyecto</span> para descargar una copia del proyecto actual.</p>
+          <p class="mt-2 text-xs text-sgs-gray">El nuevo proyecto conservará la plantilla SGS: estructura de carpetas, subcarpetas, colores y campos de ficha, pero estará vacío de elementos cartográficos.</p>
+        </div>
+      </div>
+      <div class="mt-6 flex flex-col-reverse sm:flex-row justify-end gap-2">
+        <button id="new-project-cancel" class="topbtn">Cancelar</button>
+        <button id="new-project-confirm" class="bg-sgs-orange hover:bg-sgs-orangeD text-white px-4 py-2 rounded-md font-700 uppercase tracking-wide text-xs">Entiendo, crear proyecto nuevo</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
-
-/* ============================================================
-   RUNTIME ANDROID TABLET + PC · v16.11
-   ============================================================ */
+/* Ventana emergente de seguridad para el botón Nuevo. */
 (function(){
-  'use strict';
-  function setAppHeight(){const vv=window.visualViewport;const h=Math.max(320,Math.round(vv?vv.height:window.innerHeight));document.documentElement.style.setProperty('--app-height',h+'px');try{if(typeof map!=='undefined'&&map&&map.invalidateSize)setTimeout(()=>map.invalidateSize(false),120)}catch(_e){}}
-  window.__sgsSetAppHeight=setAppHeight;setAppHeight();
-  window.addEventListener('resize',setAppHeight,{passive:true});
-  window.addEventListener('orientationchange',()=>setTimeout(setAppHeight,350),{passive:true});
-  if(window.visualViewport){window.visualViewport.addEventListener('resize',setAppHeight,{passive:true});window.visualViewport.addEventListener('scroll',setAppHeight,{passive:true});}
-  let lastTouch=0;document.addEventListener('touchend',function(e){const now=Date.now();const target=e.target;const interactive=target&&target.closest&&target.closest('button,.topbtn,.tool,input,select,textarea,[contenteditable="true"],.leaflet-container,.final-map-panel');if(!interactive&&now-lastTouch<300){e.preventDefault()}lastTouch=now;},{passive:false});
-  window.sgsDownloadBlob=function(blob,filename){try{if(typeof saveAs==='function'){saveAs(blob,filename);return}}catch(_e){}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename||'descarga';a.rel='noopener';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},1500);};
-})();
-</script>
-
-<script>
-(function(){
-  function byId(id){ return document.getElementById(id); }
-  function showFlex(id){ var el=byId(id); if(!el) return; el.classList.remove('hidden'); el.classList.add('flex'); }
-  function hideFlex(id){ var el=byId(id); if(!el) return; el.classList.remove('flex'); el.classList.add('hidden'); }
-  function on(id, ev, fn){ var el=byId(id); if(el) el.addEventListener(ev, fn, {passive:false}); }
-  document.addEventListener('DOMContentLoaded', function(){
-    on('editor-close','click',function(e){ e.preventDefault(); hideFlex('editor'); });
-    on('legend-close','click',function(e){ e.preventDefault(); hideFlex('legend-panel'); });
-    on('legend-btn','click',function(e){ e.preventDefault(); var el=byId('legend-panel'); if(!el) return; if(el.classList.contains('hidden')) showFlex('legend-panel'); else hideFlex('legend-panel'); });
-    on('draw-cancel','click',function(){ var h=byId('draw-hint'); if(h) h.classList.add('hidden'); });
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  function qsa(sel){ try{return Array.from(document.querySelectorAll(sel));}catch(e){return [];} }
-  function mkFile(accept, cb){ var i=document.createElement('input'); i.type='file'; i.accept=accept||'*/*'; i.style.display='none'; i.addEventListener('change', function(){ if(i.files && i.files[0]) cb(i.files[0]); }); document.body.appendChild(i); i.click(); setTimeout(function(){ try{i.remove();}catch(e){} }, 4000); }
-  document.addEventListener('DOMContentLoaded', function(){
-    qsa('[data-act]').forEach(function(btn){
-      btn.addEventListener('click', function(e){
-        var act = btn.getAttribute('data-act');
-        if(!act) return;
-        if(act==='save' && typeof window.saveProject==='function'){ e.preventDefault(); window.saveProject(); }
-        else if(act==='new' && typeof window.newProject==='function'){ e.preventDefault(); window.newProject(); }
-        else if(act==='open' && typeof window.openProject==='function'){ e.preventDefault(); mkFile('.json,application/json', window.openProject); }
-        else if(act==='import' && typeof window.importKMZ==='function'){ e.preventDefault(); mkFile('.kmz,.kml,application/vnd.google-earth.kmz,application/vnd.google-earth.kml+xml', window.importKMZ); }
-        else if(act==='kmz' && typeof window.exportKMZ==='function'){ e.preventDefault(); window.exportKMZ(); }
-        else if(act==='excel' && typeof window.exportExcel==='function'){ e.preventDefault(); window.exportExcel(); }
-      }, {passive:false});
-    });
-    qsa('[data-tool]').forEach(function(btn){
-      btn.addEventListener('click', function(){
-        var t = btn.getAttribute('data-tool');
-        if(t && typeof window.setTool==='function') window.setTool(t);
-      });
-    });
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  function byId(id){ return document.getElementById(id); }
-  function hide(id){ var el=byId(id); if(!el) return; el.classList.remove('flex'); el.classList.add('hidden'); }
-  function show(id){ var el=byId(id); if(!el) return; el.classList.remove('hidden'); el.classList.add('flex'); }
-  function on(id, ev, fn){ var el=byId(id); if(el) el.addEventListener(ev, fn, {passive:false}); }
-  document.addEventListener('DOMContentLoaded', function(){
-    on('tpl-close','click',function(e){ e.preventDefault(); hide('templates-modal'); });
-    on('tpl-cancel','click',function(e){ e.preventDefault(); hide('template-edit-modal'); });
-    on('folder-modal-close','click',function(e){ e.preventDefault(); hide('folder-modal'); });
-    on('fm-cancel','click',function(e){ e.preventDefault(); hide('folder-modal'); });
-    on('photo-modal-close','click',function(e){ e.preventDefault(); hide('photo-modal'); });
-    var pm = byId('photo-modal');
-    if(pm) pm.addEventListener('click', function(e){ if(e.target===pm) hide('photo-modal'); });
-    on('manage-templates','click',function(e){ e.preventDefault(); show('templates-modal'); });
-    on('add-folder','click',function(){ if(typeof window.openFolderModal==='function') window.openFolderModal(null); else show('folder-modal'); });
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  function byId(id){ return document.getElementById(id); }
-  function on(id, ev, fn){ var el=byId(id); if(el) el.addEventListener(ev, fn, {passive:false}); }
-  function toggleHidden(id, mode){ var el=byId(id); if(!el) return; var hidden = el.classList.contains('hidden'); if(hidden){ el.classList.remove('hidden'); if(mode) el.classList.add(mode); } else { if(mode) el.classList.remove(mode); el.classList.add('hidden'); } }
-  document.addEventListener('DOMContentLoaded', function(){
-    on('locate-btn','click',function(e){ if(typeof window.locate==='function'){ e.preventDefault(); window.locate(true); } });
-    on('geo-go','click',function(e){ if(typeof window.runGeocode==='function'){ e.preventDefault(); window.runGeocode(); } });
-    var gi = byId('geo-input');
-    if(gi) gi.addEventListener('keydown', function(e){ if(e.key==='Enter' && typeof window.runGeocode==='function'){ e.preventDefault(); window.runGeocode(); } });
-    on('labels-btn','click',function(e){ if(typeof window.toggleLabels==='function'){ e.preventDefault(); window.toggleLabels(); } });
-    on('legend-btn','click',function(e){ if(typeof window.toggleLegend==='function'){ e.preventDefault(); window.toggleLegend(); } else { e.preventDefault(); toggleHidden('legend-panel','flex'); } });
-    var op = byId('ign-opacity-range');
-    if(op) op.addEventListener('input', function(){ var v=byId('ign-opacity-val'); if(v) v.textContent=op.value; });
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  const CACHE_NAME = 'sgs-offline-tiles-v1';
-  function byId(id){ return document.getElementById(id); }
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); }catch(e){} }
-  function getMap(){ try { return window.map || null; } catch(e){ return null; } }
-  function currentTileLayer(){
-    const m = getMap();
-    if(!m || !m.eachLayer) return null;
-    let tile = null;
-    m.eachLayer(function(l){ if(!tile && l && typeof l.getTileUrl === 'function') tile = l; });
-    return tile;
-  }
-  function latLngToTile(lat, lon, z){
-    const n = Math.pow(2, z);
-    const x = Math.floor((lon + 180) / 360 * n);
-    const y = Math.floor((1 - Math.log(Math.tan(lat * Math.PI/180) + 1/Math.cos(lat * Math.PI/180)) / Math.PI) / 2 * n);
-    return {x,y,z};
-  }
-  function tileRange(bounds, z){
-    const nw = latLngToTile(bounds.getNorth(), bounds.getWest(), z);
-    const se = latLngToTile(bounds.getSouth(), bounds.getEast(), z);
-    return { minX: Math.min(nw.x,se.x), maxX: Math.max(nw.x,se.x), minY: Math.min(nw.y,se.y), maxY: Math.max(nw.y,se.y), z };
-  }
-  async function cacheViewportTiles(){
-    const m = getMap();
-    const layer = currentTileLayer();
-    if(!m || !layer || typeof caches === 'undefined'){ toastMsg('Offline no disponible en este navegador.', 'error'); return; }
-    const bounds = m.getBounds();
-    const z = typeof m.getZoom === 'function' ? m.getZoom() : 16;
-    const r = tileRange(bounds, z);
-    let urls = [];
-    for(let x=r.minX; x<=r.maxX; x++) for(let y=r.minY; y<=r.maxY; y++) {
-      try{ urls.push(layer.getTileUrl({x,y,z})); }catch(e){}
-    }
-    if(urls.length > 600){ toastMsg('Demasiadas teselas visibles. Reduce zoom o área.', 'error'); return; }
-    if(!urls.length){ toastMsg('No se han detectado teselas para descargar.', 'error'); return; }
-    const cache = await caches.open(CACHE_NAME);
-    let ok = 0, fail = 0;
-    toastMsg('Descargando ' + urls.length + ' teselas para uso offline…', 'info');
-    for(const url of urls){
-      try{
-        const res = await fetch(url, {mode:'cors', cache:'no-cache'});
-        if(res.ok) { await cache.put(url, res.clone()); ok++; }
-        else fail++;
-      }catch(e){ fail++; }
-    }
-    toastMsg('Teselas guardadas: ' + ok + '. Fallos: ' + fail + '.', fail ? 'info' : 'success');
-  }
-  async function offlineStatus(){
-    if(typeof caches === 'undefined'){ toastMsg('CacheStorage no disponible.', 'error'); return; }
-    const cache = await caches.open(CACHE_NAME);
-    const keys = await cache.keys();
-    toastMsg('Teselas offline guardadas: ' + keys.length + '.', 'info');
-  }
-  async function clearOffline(){
-    if(typeof caches === 'undefined'){ toastMsg('CacheStorage no disponible.', 'error'); return; }
-    await caches.delete(CACHE_NAME);
-    toastMsg('Caché offline borrada.', 'success');
-  }
-  function buildOfflinePanel(){
-    if(byId('offline-panel')) return;
-    const panel = document.createElement('div');
-    panel.id = 'offline-panel';
-    panel.className = 'hidden fixed z-[1400] right-3 bottom-3 bg-white border border-sgs-line rounded-xl shadow-xl p-3 w-[320px] max-w-[92vw] text-sm';
-    panel.innerHTML = '<div class="font-700 text-sgs-dark mb-1">Modo offline</div><div class="text-xs text-sgs-gray mb-3">Descarga las teselas visibles del mapa para usarlas después sin conexión en esa misma zona.</div><div class="flex flex-col gap-2"><button id="offline-save" class="topbtn bg-sgs-orange text-white rounded-md">Descargar zona visible</button><button id="offline-status" class="topbtn rounded-md border border-sgs-line">Ver estado</button><button id="offline-clear" class="topbtn rounded-md border border-sgs-line">Borrar caché offline</button><button id="offline-close" class="topbtn rounded-md border border-sgs-line">Cerrar</button></div>';
-    document.body.appendChild(panel);
-    byId('offline-save').addEventListener('click', cacheViewportTiles);
-    byId('offline-status').addEventListener('click', offlineStatus);
-    byId('offline-clear').addEventListener('click', clearOffline);
-    byId('offline-close').addEventListener('click', function(){ panel.classList.add('hidden'); });
-  }
-  document.addEventListener('DOMContentLoaded', function(){
-    buildOfflinePanel();
-    const btn = byId('offline-btn');
-    if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); const p = byId('offline-panel'); if(p) p.classList.toggle('hidden'); }, {passive:false});
-  });
-})();
-</script>
-
-
-<script>
-(function(){
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); else alert(msg); }catch(e){ try{ alert(msg); }catch(_){} } }
-  function secureContextOk(){ return window.isSecureContext || location.hostname === 'localhost' || location.hostname === '127.0.0.1'; }
-  function runNativeLocate(highAccuracy){
-    if(!navigator.geolocation){ toastMsg('Este navegador no soporta geolocalización.', 'error'); return; }
-    if(!secureContextOk() && location.protocol !== 'file:'){
-      toastMsg('La ubicación requiere HTTPS o localhost en este navegador.', 'error');
-      return;
-    }
-    var opts = { enableHighAccuracy: !!highAccuracy, timeout: 12000, maximumAge: 10000 };
-    navigator.geolocation.getCurrentPosition(function(pos){
-      try {
-        var lat = pos.coords.latitude, lng = pos.coords.longitude, acc = Math.round(pos.coords.accuracy || 0);
-        if(window.map && typeof window.map.setView === 'function') window.map.setView([lat,lng], Math.max((window.map.getZoom && window.map.getZoom()) || 17, 17));
-        if(window.L && window.map){
-          if(window.__sgsLocateMarker) { try{ window.map.removeLayer(window.__sgsLocateMarker); }catch(e){} }
-          if(window.__sgsLocateCircle) { try{ window.map.removeLayer(window.__sgsLocateCircle); }catch(e){} }
-          window.__sgsLocateMarker = L.marker([lat,lng]).addTo(window.map);
-          window.__sgsLocateCircle = L.circle([lat,lng], { radius: Math.max(acc,5), weight:1 }).addTo(window.map);
-        }
-        toastMsg('Ubicación obtenida' + (acc ? ' (±' + acc + ' m)' : '') + '.', 'success');
-      } catch(e){ toastMsg('Ubicación obtenida, pero el mapa no está listo todavía.', 'info'); }
-    }, function(err){
-      var msg = 'No se pudo obtener la ubicación.';
-      if(err && err.code === 1) msg = 'Permiso de ubicación denegado.';
-      else if(err && err.code === 2) msg = 'Ubicación no disponible.';
-      else if(err && err.code === 3) msg = 'Tiempo de espera agotado al obtener la ubicación.';
-      if(location.protocol === 'file:') msg += ' En algunos navegadores Android/Edge conviene abrir la app desde http://localhost en lugar de file://.';
-      toastMsg(msg, 'error');
-    }, opts);
-  }
-  function bindLocate(){
-    var btn = document.getElementById('locate-btn');
-    if(btn) btn.addEventListener('click', function(e){ e.preventDefault(); runNativeLocate(true); }, {passive:false});
-    window.locate = runNativeLocate;
-  }
-  function hintPermission(){
-    try {
-      if(!navigator.permissions || !navigator.permissions.query) return;
-      navigator.permissions.query({name:'geolocation'}).then(function(r){
-        if(r.state === 'denied') toastMsg('La ubicación está bloqueada en el navegador. Debes permitirla manualmente.', 'info');
-      }).catch(function(){});
-    } catch(e){}
-  }
-  document.addEventListener('DOMContentLoaded', function(){ bindLocate(); setTimeout(hintPermission, 800); });
-})();
-</script>
-
-
-<script>
-(function(){
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); else console.log(msg); }catch(e){} }
-  function fitToLatLng(lat, lng){
-    var m = window.map;
-    if(!m) return false;
-    try {
-      if(typeof m.flyTo === 'function') { m.flyTo([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); return true; }
-    } catch(e){}
-    try {
-      if(typeof m.setView === 'function') { m.setView([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); return true; }
-    } catch(e){}
-    try {
-      if(typeof m.panTo === 'function') { m.panTo([lat,lng]); return true; }
-    } catch(e){}
-    return false;
-  }
-  window.__sgsApplyLocateResult = function(lat, lng, acc){
-    try {
-      if(window.L && window.map){
-        if(window.__sgsLocateMarker) { try{ window.map.removeLayer(window.__sgsLocateMarker); }catch(e){} }
-        if(window.__sgsLocateCircle) { try{ window.map.removeLayer(window.__sgsLocateCircle); }catch(e){} }
-        window.__sgsLocateMarker = L.marker([lat,lng]).addTo(window.map);
-        window.__sgsLocateCircle = L.circle([lat,lng], { radius: Math.max(acc||5,5), weight:1 }).addTo(window.map);
-      }
-      var ok = fitToLatLng(lat,lng);
-      if(ok) toastMsg('Ubicación obtenida' + (acc ? ' (±' + Math.round(acc) + ' m)' : '') + '.', 'success');
-      else toastMsg('Ubicación obtenida, pero el mapa no está listo todavía.', 'info');
-      return ok;
-    } catch(e){
-      toastMsg('Ubicación obtenida, pero no se pudo centrar el mapa.', 'error');
-      return false;
-    }
+  const modal=document.getElementById('new-project-modal');
+  const openModal=()=>{modal.classList.remove('hidden');modal.classList.add('flex');document.getElementById('new-project-cancel').focus();};
+  const closeModal=()=>{modal.classList.add('hidden');modal.classList.remove('flex');};
+  newProject=function(){
+    if(!state.folders.length&&!state.features.length){sgsNewTemplate();renderAll();fitAll();scheduleAutoSave();toast('Proyecto nuevo creado con la plantilla SGS.','success');return;}
+    openModal();
   };
-})();
-</script>
-
-
-<script>
-(function(){
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); else console.log(msg); }catch(e){} }
-  function getMapRef(){
-    try {
-      if(window.map && typeof window.map.setView === 'function') return window.map;
-      if(window.__map && typeof window.__map.setView === 'function') return window.__map;
-      if(window._map && typeof window._map.setView === 'function') return window._map;
-      if(window.leafletMap && typeof window.leafletMap.setView === 'function') return window.leafletMap;
-    } catch(e){}
-    return null;
-  }
-  function recenterWhenReady(lat, lng, acc, tries){
-    var m = getMapRef();
-    if(m){
-      try{ if(typeof m.invalidateSize==='function') m.invalidateSize(true); }catch(e){}
-      try{ if(typeof m.flyTo==='function') { m.flyTo([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); return true; } }catch(e){}
-      try{ if(typeof m.setView==='function') { m.setView([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); return true; } }catch(e){}
-      try{ if(typeof m.panTo==='function') { m.panTo([lat,lng]); return true; } }catch(e){}
-    }
-    if(tries > 0){ setTimeout(function(){ recenterWhenReady(lat,lng,acc,tries-1); }, 350); return false; }
-    toastMsg('Ubicación obtenida, pero el mapa no respondió al recentrado.', 'error');
-    return false;
-  }
-  window.__sgsApplyLocateResult = function(lat, lng, acc){
-    try {
-      var m = getMapRef();
-      if(window.L && m){
-        if(window.__sgsLocateMarker) { try{ m.removeLayer(window.__sgsLocateMarker); }catch(e){} }
-        if(window.__sgsLocateCircle) { try{ m.removeLayer(window.__sgsLocateCircle); }catch(e){} }
-        window.__sgsLocateMarker = L.marker([lat,lng]).addTo(m);
-        window.__sgsLocateCircle = L.circle([lat,lng], { radius: Math.max(acc||5,5), weight:1 }).addTo(m);
-      }
-      var ok = recenterWhenReady(lat,lng,acc,8);
-      if(ok) toastMsg('Ubicación obtenida' + (acc ? ' (±' + Math.round(acc) + ' m)' : '') + '.', 'success');
-      else toastMsg('Ubicación obtenida. Esperando a que el mapa termine de inicializar…', 'info');
-      return ok;
-    } catch(e){
-      toastMsg('Ubicación obtenida, pero no se pudo aplicar al mapa.', 'error');
-      return false;
-    }
+  document.getElementById('new-project-cancel').onclick=closeModal;
+  document.querySelectorAll('[data-new-project-close]').forEach(el=>el.onclick=closeModal);
+  document.getElementById('new-project-confirm').onclick=()=>{
+    closeModal();closeEditor();cancelDraw();cancelMeasure();sgsNewTemplate();renderAll();fitAll();scheduleAutoSave();
+    toast('Proyecto nuevo creado con la estructura SGS.','success');
   };
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.classList.contains('hidden'))closeModal();});
 })();
 </script>
-
-
 <script>
-(function(){
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); else console.log(msg); }catch(e){} }
-  function domMapFallback(lat, lng){
-    try {
-      var img = document.querySelector('#map img.leaflet-tile, #map canvas, #map .leaflet-pane');
-      if(!img) return false;
-      var a = document.createElement('a');
-      a.href = 'https://www.google.com/maps?q=' + encodeURIComponent(lat + ',' + lng);
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      a.click();
-      return true;
-    } catch(e){ return false; }
-  }
-  function findAnyLeafletMap(){
-    try {
-      if(window.map && typeof window.map.setView==='function') return window.map;
-      for (var k in window) {
-        try {
-          var v = window[k];
-          if(v && typeof v === 'object' && typeof v.setView === 'function' && typeof v.getCenter === 'function' && typeof v.eachLayer === 'function') return v;
-        } catch(e){}
-      }
-    } catch(e){}
-    return null;
-  }
-  window.__sgsApplyLocateResult = function(lat, lng, acc){
-    try {
-      var m = findAnyLeafletMap();
-      if(m && window.L){
-        try{ if(window.__sgsLocateMarker) m.removeLayer(window.__sgsLocateMarker); }catch(e){}
-        try{ if(window.__sgsLocateCircle) m.removeLayer(window.__sgsLocateCircle); }catch(e){}
-        try{ window.__sgsLocateMarker = L.marker([lat,lng]).addTo(m); }catch(e){}
-        try{ window.__sgsLocateCircle = L.circle([lat,lng], { radius: Math.max(acc||5,5), weight:1 }).addTo(m); }catch(e){}
-        try{ if(typeof m.invalidateSize==='function') m.invalidateSize(true); }catch(e){}
-        try{ m.setView([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); toastMsg('Ubicación centrada en el mapa.', 'success'); return true; }catch(e){}
-        try{ m.flyTo([lat,lng], Math.max((m.getZoom && m.getZoom()) || 18, 18)); toastMsg('Ubicación centrada en el mapa.', 'success'); return true; }catch(e){}
-        try{ m.panTo([lat,lng]); toastMsg('Ubicación centrada en el mapa.', 'success'); return true; }catch(e){}
-      }
-      if(domMapFallback(lat,lng)) { toastMsg('No se pudo usar el mapa interno; se abrió la ubicación en Google Maps.', 'info'); return false; }
-      toastMsg('Ubicación obtenida, pero la app no expone la instancia del mapa para recentrar.', 'error');
-      return false;
-    } catch(e){
-      toastMsg('Ubicación obtenida, pero no se pudo aplicar al mapa.', 'error');
-      return false;
-    }
-  };
-})();
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(console.warn));
+}
 </script>
-
-
-<script>
-// SGS Final Reinforcement Layer
-(function(){
-  function toastMsg(msg, type){ try{ if(typeof window.toast==='function') window.toast(msg, type||'info'); else console.log(msg); }catch(e){} }
-
-  // 1. Global Error Boundary to prevent silent crashes in the field
-  window.addEventListener('error', function(e){
-    if(e.message && e.message.indexOf('ResizeObserver') > -1) return; // ignore benign visual errors
-    console.warn('SGS App Error:', e.message);
-    toastMsg('Aviso interno: ' + (e.message || 'Error desconocido'), 'error');
-  });
-  window.addEventListener('unhandledrejection', function(e){
-    console.warn('SGS Promise Error:', e.reason);
-  });
-
-  // 2. Map instance synchronization (make the captured map available to other broken functions)
-  function syncMapInstance(){
-    if(!window.map && window.__sgsCapturedMap) {
-      window.map = window.__sgsCapturedMap;
-    }
-  }
-
-  // 3. Fallback for tool selection (if internal setTool fails or is hidden)
-  function safeSetTool(toolName){
-    try {
-      if(typeof window.setTool === 'function') {
-        window.setTool(toolName);
-      } else if (window.__sgsCapturedMap) {
-        // Just visual feedback if internal logic is fully hidden
-        toastMsg('Herramienta activada: ' + toolName, 'info');
-      }
-    } catch(e) {
-      toastMsg('Error al cambiar herramienta', 'error');
-    }
-  }
-
-  // 4. Force bind all tool buttons just in case
-  document.addEventListener('DOMContentLoaded', function(){
-    setInterval(syncMapInstance, 1000); // keep syncing map reference
-
-    var tools = document.querySelectorAll('.tool[data-tool]');
-    tools.forEach(function(t){
-      t.addEventListener('click', function(e){
-        var toolName = t.getAttribute('data-tool');
-        if(toolName) safeSetTool(toolName);
-      });
-    });
-
-    // Hardening export buttons to ensure they have visual feedback even if long-running
-    var exports = document.querySelectorAll('[data-act="kmz"], [data-act="excel"], [data-act="save"]');
-    exports.forEach(function(btn){
-      btn.addEventListener('click', function(){
-        toastMsg('Procesando solicitud...', 'info');
-      });
-    });
-  });
-})();
-</script>
-
-
-<script>
-// SGS Release Stabilizer: make the location control single-owner to avoid duplicate handlers/toasts.
-(function(){
-  function bindSingleLocate(){
-    var btn=document.getElementById('locate-btn');
-    if(!btn || btn.dataset.sgsSingleLocate==='1') return;
-    btn.dataset.sgsSingleLocate='1';
-    btn.addEventListener('click', function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      if(typeof window.sgsForceLocate==='function') window.sgsForceLocate();
-      else if(typeof window.locate==='function') window.locate(true);
-    }, true);
-  }
-  function limitErrorNotices(){
-    var last=''; var at=0;
-    var old=window.toast;
-    if(typeof old!=='function' || old.__sgsLimited) return;
-    function limited(msg,type){
-      var now=Date.now(), key=String(msg||'');
-      if(key===last && now-at<1800) return;
-      last=key; at=now; return old.apply(this,arguments);
-    }
-    limited.__sgsLimited=true; window.toast=limited;
-  }
-  document.addEventListener('DOMContentLoaded',function(){ limitErrorNotices(); bindSingleLocate(); });
-})();
-</script>
-
 </body>
 </html>
