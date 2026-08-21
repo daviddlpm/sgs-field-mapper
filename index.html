@@ -821,110 +821,62 @@ https://github.com/nodeca/pako/blob/main/LICENSE
 </style>
 
 
-<style id="sgs-acustica-master-css">
-  .main-nav-btn {
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    border-bottom: 3px solid transparent;
-    color: #4b5563;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    background: transparent;
-    border-top: none;
-    border-left: none;
-    border-right: none;
+<style id="sgs-acustica-v19-8-css">
+  /* Modal de Acústica y Expediente */
+  #modal-acustica-wrap {
+    position: fixed; inset: 0; z-index: 5000;
+    background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px);
+    display: none; align-items: center; justify-content: center; padding: 16px;
   }
-  .main-nav-btn:hover {
-    color: #F36F21;
-    background-color: #fff7ed;
+  #modal-acustica-wrap.active {
+    display: flex !important;
   }
-  .main-nav-btn.active {
-    color: #F36F21;
-    border-bottom-color: #F36F21;
-    background-color: #fff7ed;
+  .modal-card {
+    background: #ffffff; border-radius: 16px; width: 100%; max-width: 950px;
+    max-height: 92vh; display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35); border: 1px solid #E2E4E6;
   }
-  .ac-select, select.field-input {
-    min-height: 36px !important;
-    height: 36px !important;
-    padding: 6px 10px !important;
-    line-height: 1.3 !important;
-    font-size: 11.5px !important;
-    background-color: #ffffff !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 6px !important;
-    color: #1f2937 !important;
-    display: block !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+  .modal-tab-btn {
+    padding: 10px 18px; font-size: 12px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.03em; border-bottom: 3px solid transparent; color: #4B5563;
+    background: transparent; border-top: none; border-left: none; border-right: none;
+    cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s;
   }
-  .ac-select:focus, select.field-input:focus {
-    border-color: #F36F21 !important;
-    outline: none !important;
-    box-shadow: 0 0 0 2px rgba(243, 111, 33, 0.2) !important;
+  .modal-tab-btn:hover { color: #F36F21; background: #FFF7ED; }
+  .modal-tab-btn.active { color: #F36F21; border-bottom-color: #F36F21; background: #FFF7ED; }
+  
+  .ac-input-box {
+    width: 100%; border: 1px solid #D1D5DB; border-radius: 6px; padding: 7px 10px;
+    font-size: 13px; font-family: 'Barlow', sans-serif; box-sizing: border-box; background: #ffffff; color: #1F2937;
   }
-  .ac-input-num {
-    min-height: 36px !important;
-    height: 36px !important;
-    padding: 6px 10px !important;
-    font-size: 11.5px !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 6px !important;
-    background: #ffffff !important;
+  .ac-input-box:focus { outline: none; border-color: #F36F21; box-shadow: 0 0 0 2px rgba(243,111,33,0.2); }
+  
+  .ac-select-box {
+    width: 100%; height: 36px; border: 1px solid #D1D5DB; border-radius: 6px;
+    padding: 6px 10px; font-size: 12px; font-family: 'Barlow', sans-serif; background: #ffffff; color: #1F2937;
   }
-  .ac-time-box {
-    width: 44px !important;
-    height: 32px !important;
-    text-align: center !important;
-    font-size: 12px !important;
-    font-weight: 700 !important;
-    font-family: monospace !important;
-    border: 1px solid #d1d5db !important;
-    border-radius: 4px !important;
-    padding: 2px !important;
-    background: #ffffff !important;
+  .ac-select-box:focus { outline: none; border-color: #F36F21; box-shadow: 0 0 0 2px rgba(243,111,33,0.2); }
+
+  .ac-time-slot-box {
+    width: 44px; height: 32px; text-align: center; font-size: 13px; font-weight: 700;
+    font-family: monospace; border: 1px solid #D1D5DB; border-radius: 4px; padding: 2px; background: #ffffff;
   }
-  .ac-time-box:focus {
-    border-color: #F36F21 !important;
-    outline: none !important;
+  .ac-time-slot-box:focus { outline: none; border-color: #F36F21; }
+
+  .ac-badge-fav { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; }
+  .ac-badge-desfav { background: #FEF3C7; color: #92400E; border: 1px solid #FCD34D; padding: 2px 8px; border-radius: 4px; font-weight: 700; font-size: 11px; }
+
+  .topbtn-acustica {
+    background: #FFF7ED; color: #F36F21; border: 1px solid #FDBA74; font-weight: 700;
+    padding: 6px 12px; border-radius: 6px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.15s;
   }
-  .ac-badge-fav {
-    background-color: #d1fae5 !important;
-    color: #065f46 !important;
-    border: 1px solid #6ee7b7 !important;
+  .topbtn-acustica:hover { background: #F36F21; color: #ffffff; }
+
+  .topbtn-export-ra {
+    background: #059669; color: #ffffff; border: none; font-weight: 700;
+    padding: 6px 12px; border-radius: 6px; font-size: 12px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: all 0.15s;
   }
-  .ac-badge-desfav {
-    background-color: #fef3c7 !important;
-    color: #92400e !important;
-    border: 1px solid #fcd34d !important;
-  }
-  .ac-preset-btn {
-    padding: 5px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 6px;
-    border: 1px solid #e5e7eb;
-    background: #f9fafb;
-    color: #374151;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-  .ac-preset-btn:hover {
-    background: #F36F21;
-    color: #ffffff;
-    border-color: #F36F21;
-  }
-  .main-view {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    z-index: 10;
-  }
+  .topbtn-export-ra:hover { background: #047857; }
 </style>
 
 </head>
@@ -951,7 +903,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       <div class="flex items-center gap-3">
         <div id="sgs-logo"><div class="bg-sgs-orange text-white font-extrabold text-xl tracking-tighter px-2.5 py-1 rounded-sm leading-none">SGS</div></div>
         <div class="border-l border-sgs-line pl-3">
-          <h1 class="font-cond font-700 text-base uppercase tracking-wide leading-none">Field Mapper <span class="text-sgs-orange">·</span> <span class="text-[10px] bg-sgs-orange text-white px-1.5 py-0.5 rounded font-700 align-middle">v19.7 PWA Acústica</span></h1>
+          <h1 class="font-cond font-700 text-base uppercase tracking-wide leading-none">Field Mapper <span class="text-sgs-orange">·</span> <span class="text-[10px] bg-sgs-orange text-white px-1.5 py-0.5 rounded font-700 align-middle">v19.8 PWA Acústica</span></h1>
           <input id="project-name" class="text-[11px] text-sgs-gray font-500 bg-transparent border-0 p-0 focus:outline-none focus:text-sgs-orange w-56" value="Proyecto sin título">
         </div>
       </div>
@@ -963,7 +915,17 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <button data-act="import" class="topbtn">Importar KMZ</button>
         <button data-act="kmz"    class="topbtn">Exportar KMZ</button>
         <button data-act="jpg"    class="topbtn">Exportar JPG</button>
+        
+        <button type="button" id="btn-open-acustica" class="topbtn-acustica" onclick="window.openModalAcustica('tab-dg')">
+          <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          📋 Expediente & Acústica 🎙️
+        </button>
+        <button type="button" id="btn-export-023-ra" class="topbtn-export-ra" onclick="window.exportar023RA()">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          📊 Exportar 023_RA (Excel)
+        </button>
         <button data-act="excel"  class="bg-sgs-orange hover:bg-sgs-orangeD text-white px-3 py-1.5 rounded-md font-700 uppercase tracking-wide">Exportar Excel</button>
+
         <button id="pwa-install-btn" class="hidden bg-sgs-orange hover:bg-sgs-orangeD text-white px-3 py-1.5 rounded-md font-700 uppercase tracking-wide flex items-center gap-1" title="Instalar PWA en el dispositivo"><svg class="w-4 h-4 inline -mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-linecap="round" stroke-linejoin="round"/></svg> Instalar PWA</button>
         <span class="w-px h-6 bg-sgs-line mx-1"></span>
         <button data-act="pin" id="pin-btn" class="topbtn" title="Bloqueo por PIN">
@@ -974,43 +936,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     <div class="sgs-stripe h-1"></div>
   </header>
 
-  <!-- BARRA DE NAVEGACIÓN PRINCIPAL DE LA APLICACIÓN -->
-  <nav class="bg-white border-b border-sgs-line px-4 flex items-center justify-between gap-2 overflow-x-auto shadow-2xs z-[500] relative shrink-0">
-    <div class="flex items-center gap-1">
-      <button type="button" id="nav-btn-map" class="main-nav-btn active" data-view="view-map" onclick="window.switchMainView('view-map')">
-        <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-        1. Mapa Cartográfico & Focos
-      </button>
-      <button type="button" id="nav-btn-dg" class="main-nav-btn" data-view="view-dg" onclick="window.switchMainView('view-dg')">
-        <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-        2. Datos Generales & Instalación
-      </button>
-      <button type="button" id="nav-btn-proc" class="main-nav-btn" data-view="view-proc" onclick="window.switchMainView('view-proc')">
-        <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 100-6 3 3 0 000 6z"/></svg>
-        3. Proceso Productivo (🎙️ Voz)
-      </button>
-      <button type="button" id="nav-btn-fases" class="main-nav-btn" data-view="view-fases" onclick="window.switchMainView('view-fases')">
-        <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        4. Fases de Ruido & Horarios
-      </button>
-      <button type="button" id="nav-btn-clima" class="main-nav-btn" data-view="view-clima" onclick="window.switchMainView('view-clima')">
-        <svg class="w-4 h-4 text-sgs-orange" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"/></svg>
-        5. Equipos & Clima
-      </button>
-    </div>
-    <div class="flex items-center gap-1.5 py-1">
-      <button type="button" id="btn-export-ra-excel" onclick="window.exportar023RA()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-1.5 rounded-lg font-700 text-xs flex items-center gap-1.5 shadow-sm transition-all cursor-pointer">
-        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-        Exportar 023_RA (Excel)
-      </button>
-    </div>
-  </nav>
-
-
-  
-  <div id="main-views-wrapper" class="flex-1 flex overflow-hidden relative" style="width: 100%; height: calc(100vh - 85px);">
-    <div id="view-map" class="main-view flex-1 flex min-h-0 relative">
-      
+  <div class="flex-1 flex min-h-0 relative">
 
     <!-- ============ SIDEBAR ============ -->
     <aside class="w-72 bg-white border-r border-sgs-line flex flex-col shrink-0">
@@ -1291,373 +1217,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
         <button id="off-start" class="text-xs px-4 py-2 rounded bg-sgs-orange text-white font-700">Descargar y guardar mapa</button>
       </div>
     </div>
-  
-    </div> <!-- /view-map -->
-    
-    <!-- VISTA 2: DATOS GENERALES & DESCRIPCIÓN DE LA INSTALACIÓN -->
-    <div id="view-dg" class="main-view hidden flex-1 overflow-y-auto p-6 bg-[#f4f5f7] space-y-6">
-      <div class="max-w-5xl mx-auto space-y-6">
-        
-        <!-- Tarjeta 1: Datos de la Instalación y Titular -->
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center justify-between border-b border-sgs-line pb-3">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-              <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">1. Datos Generales de la Actuación (Filas 1 a 17)</h3>
-            </div>
-            <span class="px-2.5 py-0.5 rounded text-[11px] font-700 bg-orange-100 text-sgs-orange border border-orange-200">Hoja DATOS GENERALES (RA)</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Nº de Expediente</label>
-              <input id="main-dg-expediente" class="field-input w-full font-mono font-700 text-sgs-orange text-sm" value="391767_ARDAGH">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Titular / Razón Social</label>
-              <input id="main-dg-cliente" class="field-input w-full" value="ARDAGH METAL PACKAGING SPAIN S.L.">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Instalación / Centro de Trabajo</label>
-              <input id="main-dg-instalacion" class="field-input w-full" value="Planta Valdemorillo">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Dirección Completa y Localidad</label>
-              <input id="main-dg-direccion" class="field-input w-full" value="Calle San Juan s/n, Valdemorillo (Madrid)">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Código CNAE</label>
-              <input id="main-dg-cnae" class="field-input w-full" value="2592 - Fabricación de envases metálicos">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Autorización Ambiental (AAI)</label>
-              <input id="main-dg-aai" class="field-input w-full" value="Modificación 11-10-2016 (AAI)">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Objetivo del Ensayo (Fila 16)</label>
-              <select id="main-dg-objetivo" class="ac-select w-full">
-                <option value="Evaluación de conformidad a la normativa de referencia" selected>Evaluación de conformidad a normativa</option>
-                <option value="Determinación de niveles de recepción">Determinación de niveles de recepción</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="pt-2 border-t border-sgs-line/60">
-            <label class="block text-[11px] text-sgs-gray font-600 mb-1">Justificación de la Normativa de Aplicación (Fila 15 / Celda A15)</label>
-            <select id="main-dg-norma-just" class="ac-select w-full text-xs">
-              <option value="Al contar la instalación con autorización ambiental, esta es la normativa de aplicación" selected>1. Al contar con AAI, esta es la normativa de aplicación</option>
-              <option value="No se ha identificado autorización ambiental, al encontrarse vigente Ordenanza Municipal, esta es la normativa">2. Sin AAI, de aplicación la Ordenanza Municipal de Ruidos</option>
-              <option value="No se ha identificado AAI ni Ordenanza Municipal, por lo que la normativa autonómica / RD 1367/2007 es de aplicación">3. Sin AAI ni Ordenanza, de aplicación Autonómica / RD 1367/2007</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Tarjeta 2: Descripción de la Instalación y Entorno -->
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-3">
-          <div class="flex items-center justify-between border-b border-sgs-line pb-2">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-              <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">2. Descripción de la Instalación & Entorno Físico</h3>
-            </div>
-            <button id="btn-voice-inst" type="button" class="bg-sgs-orange/10 hover:bg-sgs-orange hover:text-white text-sgs-orange px-3 py-1.5 rounded-lg font-700 flex items-center gap-1.5 border border-sgs-orange/30 transition-all text-xs cursor-pointer">
-              🎙️ Dictar por Voz
-            </button>
-          </div>
-          <div>
-            <textarea id="main-dg-desc-inst" rows="4" class="w-full p-3 text-xs border border-sgs-line rounded-lg font-sans focus:ring-1 focus:ring-sgs-orange leading-relaxed" placeholder="Describe aquí las características físicas de la instalación (superficie m², naves industriales, viales internos, cerramientos acústicos, linderos norte/sur/este/oeste y accesos)...">La instalación industrial se ubica en el polígono industrial sobre una parcela de 45.000 m², compuesta por una nave principal de producción con cerramiento de panel sándwich de 6 m de altura, zona de almacenamiento exterior y muelles de carga.</textarea>
-          </div>
-        </div>
-
-        <!-- Tarjeta 3: Valores Límite Normativos -->
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center justify-between border-b border-sgs-line pb-2">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-              <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">3. Valores Límite Normativos de Inmisión (Filas 18 a 35)</h3>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-sgs-gray font-600">Indicador Legal:</span>
-              <select id="main-dg-indicador" class="ac-select text-xs h-8 py-0.5 w-48">
-                <option value="Lk,Ti" selected>Lk,Ti (Inmisión corregida)</option>
-                <option value="Laeq,Ti">Laeq,Ti (Equivalente continuo)</option>
-                <option value="Lk">Lk (Nivel sonoro corregido)</option>
-                <option value="LAmax">LAmax (Nivel máximo)</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <span class="text-xs text-sgs-gray block mb-2 font-600">Cargar Presets Normativos Rápidos (1 Clic):</span>
-            <div class="flex flex-wrap gap-2">
-              <button type="button" class="ac-preset-btn" data-lim="70,70,60">🏭 AAI Ardagh (70 / 70 / 60)</button>
-              <button type="button" class="ac-preset-btn" data-lim="65,65,55">🏭 Industrial RD 1367 (65 / 65 / 55)</button>
-              <button type="button" class="ac-preset-btn" data-lim="55,55,45">🏡 Residencial (55 / 55 / 45)</button>
-              <button type="button" class="ac-preset-btn" data-lim="50,50,40">🏥 Sanitario / Docente (50 / 50 / 40)</button>
-              <button type="button" class="ac-preset-btn" data-lim="63,63,53">🎭 Recreativo (63 / 63 / 53)</button>
-              <button type="button" class="ac-preset-btn" data-lim="60,60,50">🏢 Terciario (60 / 60 / 50)</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-4 pt-2">
-            <div class="p-4 bg-gray-50 rounded-xl border border-sgs-line text-center">
-              <span class="text-xs text-sgs-gray block font-700 uppercase tracking-wider">☀️ Periodo Día (Ld)</span>
-              <input id="main-dg-lim-dia" type="number" class="field-input text-center font-700 text-xl text-sgs-orange w-full mt-2" value="70">
-              <span class="text-[10px] text-sgs-gray mt-1 block">07:00 a 19:00</span>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl border border-sgs-line text-center">
-              <span class="text-xs text-sgs-gray block font-700 uppercase tracking-wider">🌅 Periodo Tarde (Le)</span>
-              <input id="main-dg-lim-tarde" type="number" class="field-input text-center font-700 text-xl text-sgs-orange w-full mt-2" value="70">
-              <span class="text-[10px] text-sgs-gray mt-1 block">19:00 a 23:00</span>
-            </div>
-            <div class="p-4 bg-gray-50 rounded-xl border border-sgs-line text-center">
-              <span class="text-xs text-sgs-gray block font-700 uppercase tracking-wider">🌙 Periodo Noche (Ln)</span>
-              <input id="main-dg-lim-noche" type="number" class="field-input text-center font-700 text-xl text-sgs-orange w-full mt-2" value="60">
-              <span class="text-[10px] text-sgs-gray mt-1 block">23:00 a 07:00</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div> <!-- FIN view-dg -->
-
-    <!-- VISTA 3: DESCRIPCIÓN DEL PROCESO PRODUCTIVO (CON VOZ Y FOCOS) -->
-    <div id="view-proc" class="main-view hidden flex-1 overflow-y-auto p-6 bg-[#f4f5f7] space-y-6">
-      <div class="max-w-5xl mx-auto space-y-6">
-        
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center justify-between border-b border-sgs-line pb-3 flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-              <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">Memoria Descriptiva del Proceso Industrial (Filas 36 a 59)</h3>
-            </div>
-            
-            <button id="btn-voice-proc-main" type="button" class="bg-sgs-orange/10 hover:bg-sgs-orange hover:text-white text-sgs-orange px-4 py-2 rounded-lg font-700 flex items-center gap-2 border border-sgs-orange/30 transition-all text-xs shadow-xs cursor-pointer">
-              🎙️ Dictar por Voz (Micrófono)
-            </button>
-          </div>
-
-          <!-- Barra interactiva de Focos y Plantillas -->
-          <div class="flex items-center justify-between flex-wrap gap-3 bg-[#f8f9fa] p-3 rounded-xl border border-sgs-line">
-            <div class="flex items-center gap-2 flex-wrap">
-              <span class="text-xs text-sgs-gray font-700 uppercase">Insertar Referencia de Foco:</span>
-              <div id="main-proc-focos-chips" class="flex items-center gap-1.5 flex-wrap">
-                <!-- Se genera dinámicamente: +[F1], +[F2], +[F12]... -->
-              </div>
-            </div>
-            <div class="flex items-center gap-2">
-              <span class="text-xs text-sgs-gray font-700 uppercase">Plantilla de Etapa:</span>
-              <select id="main-proc-template-select" class="ac-select text-xs h-8 py-0.5 w-52">
-                <option value="">Seleccionar etapa típica...</option>
-                <option value="RECEPCIÓN DE MATERIAS PRIMAS (MP)
-La descarga de bobinas de aluminio se realiza en el interior de la nave 1 mediante puente grúa.
-
-">Recepción Materias Primas</option>
-                <option value="LÍNEAS DE PRODUCCIÓN Y PRENSADO (PR)
-El proceso de conformado de envases opera en continuo mediante bodymakers (F5) y trimmers de corte (F6).
-
-">Prensado y Conformado</option>
-                <option value="APLICACIÓN DE PINTURA Y BARNICES (PT)
-Aplicación superficial mediante printers rotativas (F7) y hornos de secado (F4).
-
-">Pintura y Tratamiento</option>
-                <option value="EXPEDICIÓN Y LOGÍSTICA (EX)
-La carga de producto final se realiza en interior con carretillas eléctricas. Camiones en parada (F12).
-
-">Expedición y Carga</option>
-                <option value="PROCESOS AUXILIARES (AX)
-Sala de compresores (F2), torres de refrigeración (F3) y climatización general (F1).
-
-">Procesos Auxiliares</option>
-              </select>
-              <button id="btn-insert-template-main" type="button" class="bg-gray-200 hover:bg-gray-300 text-sgs-black px-3 py-1.5 rounded-lg text-xs font-700 cursor-pointer">+ Insertar</button>
-            </div>
-          </div>
-
-          <!-- Textarea Grande -->
-          <div>
-            <textarea id="main-proc-texto" rows="14" class="w-full p-4 text-xs leading-relaxed border border-sgs-line rounded-xl font-sans focus:ring-1 focus:ring-sgs-orange focus:border-sgs-orange shadow-inner" placeholder="Escribe o dicta aquí el proceso productivo completo de la actividad, turnos de trabajo y asocia los focos de ruido correspondientes..."></textarea>
-          </div>
-
-          <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-900 flex items-center gap-2">
-            <span>💡</span>
-            <span><b>Consejo:</b> Puedes usar el teclado físico, el teclado táctil de la tablet Android o dictar con el micrófono. Al tocar sobre cualquier foco de la barra superior, se insertará automáticamente en el texto respetando la trazabilidad.</span>
-          </div>
-        </div>
-
-      </div>
-    </div> <!-- FIN view-proc -->
-
-    <!-- VISTA 4: FASES DE RUIDO & HORARIOS -->
-    <div id="view-fases" class="main-view hidden flex-1 overflow-y-auto p-6 bg-[#f4f5f7] space-y-6">
-      <div class="max-w-5xl mx-auto space-y-6">
-        
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center justify-between border-b border-sgs-line pb-3 flex-wrap gap-2">
-            <div class="flex items-center gap-2">
-              <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-              <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">Agrupamiento de Focos por Fases de Ruido (Filas 113 a 123)</h3>
-            </div>
-            <div class="flex items-center gap-2">
-              <button id="btn-auto-fases-main" type="button" class="bg-sgs-orange hover:bg-sgs-orangeD text-white px-4 py-2 rounded-lg font-700 text-xs shadow-xs flex items-center gap-2 transition-all cursor-pointer">
-                ⚡ Auto-agrupar Focos por Horarios
-              </button>
-              <button id="btn-add-fase-manual-main" type="button" class="bg-gray-100 hover:bg-gray-200 text-sgs-black px-3 py-2 rounded-lg font-700 text-xs border border-sgs-line cursor-pointer">
-                + Añadir Fase
-              </button>
-            </div>
-          </div>
-
-          <!-- Horarios Base -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 bg-[#f8f9fa] p-4 rounded-xl border border-sgs-line text-xs">
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-700 text-sgs-black">☀️ Horario Día:</span>
-              <input id="main-fases-hora-dia" class="field-input text-center w-32 h-8 text-xs font-mono font-700" value="7:00-19:00">
-              <span class="text-sgs-gray">(12h)</span>
-            </div>
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-700 text-sgs-black">🌅 Horario Tarde:</span>
-              <input id="main-fases-hora-tarde" class="field-input text-center w-32 h-8 text-xs font-mono font-700" value="19:00-23:00">
-              <span class="text-sgs-gray">(4h)</span>
-            </div>
-            <div class="flex items-center justify-between gap-2">
-              <span class="font-700 text-sgs-black">🌙 Horario Noche:</span>
-              <input id="main-fases-hora-noche" class="field-input text-center w-32 h-8 text-xs font-mono font-700" value="23:00-7:00">
-              <span class="text-sgs-gray">(8h)</span>
-            </div>
-          </div>
-
-          <!-- Tabla de Fases -->
-          <div class="overflow-x-auto border border-sgs-line rounded-xl">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-sgs-black text-white font-700 uppercase text-[11px]">
-                <tr>
-                  <th class="p-3 w-14 text-center">Ref.</th>
-                  <th class="p-3">Focos de Ruido Incluidos en la Fase</th>
-                  <th class="p-3 w-20 text-center">Día (h)</th>
-                  <th class="p-3 w-20 text-center">Tarde (h)</th>
-                  <th class="p-3 w-20 text-center">Noche (h)</th>
-                  <th class="p-3">Observaciones</th>
-                  <th class="p-3 w-12 text-center">Acc.</th>
-                </tr>
-              </thead>
-              <tbody id="main-tbody-fases" class="divide-y divide-sgs-line bg-white">
-                <!-- Se genera dinámicamente -->
-              </tbody>
-            </table>
-          </div>
-
-          <div class="pt-2">
-            <label class="block text-xs text-sgs-gray font-700 mb-1">Justificación de las Fases Medidas (Filas 122-123)</label>
-            <textarea id="main-fases-just" rows="2" class="w-full p-3 text-xs border border-sgs-line rounded-lg" placeholder="Justificación técnica de la representatividad de las fases...">Se ha identificado una única fase máxima continua, evaluándose las medidas en los distintos periodos con los valores obtenidos para esta fase.</textarea>
-          </div>
-        </div>
-
-      </div>
-    </div> <!-- FIN view-fases -->
-
-    <!-- VISTA 5: EQUIPOS & CLIMA -->
-    <div id="view-clima" class="main-view hidden flex-1 overflow-y-auto p-6 bg-[#f4f5f7] space-y-6">
-      <div class="max-w-5xl mx-auto space-y-6">
-        
-        <!-- Equipos -->
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center gap-2 border-b border-sgs-line pb-3">
-            <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-            <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">Personal Técnico e Instrumentación Trazable (ISO 17025)</h3>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Técnico Responsable del Ensayo</label>
-              <input id="main-clima-tec-resp" class="field-input w-full font-600" value="David de la Peña Martínez">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Técnico de Apoyo en Campo</label>
-              <input id="main-clima-tec-apoyo" class="field-input w-full font-600" value="Rubén García Mingo">
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 text-xs">
-            <div class="p-3 rounded-xl border border-sgs-line bg-[#f8f9fa] space-y-2">
-              <span class="font-700 text-sgs-orange block">🔊 Sonómetro Integrador</span>
-              <input id="main-clima-sono-serie" class="field-input w-full text-xs" value="BRÜEL & KJÆR 2250 (Nº 3012334)">
-              <input id="main-clima-sono-calib" class="field-input w-full text-[11px]" value="Calib: 29/11/2023 - Vence: 29/11/2025">
-            </div>
-            <div class="p-3 rounded-xl border border-sgs-line bg-[#f8f9fa] space-y-2">
-              <span class="font-700 text-sgs-orange block">🎯 Calibrador Acústico</span>
-              <input id="main-clima-calib-serie" class="field-input w-full text-xs" value="BRÜEL & KJÆR 4231 (Nº 2459803)">
-              <input id="main-clima-calib-calib" class="field-input w-full text-[11px]" value="Calib: 29/11/2023 - Vence: 29/11/2025">
-            </div>
-            <div class="p-3 rounded-xl border border-sgs-line bg-[#f8f9fa] space-y-2">
-              <span class="font-700 text-sgs-orange block">🌬️ Anemómetro</span>
-              <input id="main-clima-anem-serie" class="field-input w-full text-xs" value="TESTO Molinete (Nº 46556850/0922)">
-              <input id="main-clima-anem-calib" class="field-input w-full text-[11px]" value="Calib: 20/02/2024 - Vence: 20/02/2026">
-            </div>
-          </div>
-
-          <!-- Verificación In Situ -->
-          <div class="p-4 bg-amber-50 rounded-xl border border-amber-200 mt-2">
-            <div class="flex items-center justify-between mb-2">
-              <span class="font-700 text-amber-900 text-xs">Verificación In Situ del Sonómetro (Criterio |ΔL| ≤ 0.3 dB)</span>
-              <span class="px-2.5 py-0.5 rounded font-700 text-xs bg-emerald-100 text-emerald-800 border border-emerald-300">✅ Verificación Válida (|0.04 dB| ≤ 0.3 dB)</span>
-            </div>
-            <div class="grid grid-cols-4 gap-3 text-center text-xs">
-              <div><span class="text-sgs-gray block text-[11px]">Patrón (dB)</span><input id="main-clima-patron" type="number" step="0.01" class="field-input text-center w-full font-mono" value="93.91"></div>
-              <div><span class="text-sgs-gray block text-[11px]">V. Inicial (dB)</span><input id="main-clima-inicial" type="number" step="0.01" class="field-input text-center w-full font-mono font-700" value="93.87"></div>
-              <div><span class="text-sgs-gray block text-[11px]">V. Intermedio (dB)</span><input id="main-clima-inter" type="number" step="0.01" class="field-input text-center w-full font-mono" value="93.86"></div>
-              <div><span class="text-sgs-gray block text-[11px]">V. Final (dB)</span><input id="main-clima-final" type="number" step="0.01" class="field-input text-center w-full font-mono font-700" value="93.83"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Clima -->
-        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
-          <div class="flex items-center gap-2 border-b border-sgs-line pb-3">
-            <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
-            <h3 class="font-cond font-700 text-base uppercase tracking-wide text-sgs-black">Climatología y Micrometeorología de Campo</h3>
-          </div>
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Temperatura Inicial / Final (°C)</label>
-              <div class="grid grid-cols-2 gap-1.5">
-                <input id="main-clima-temp-ini" type="number" step="0.1" class="field-input text-center font-600" value="17.0">
-                <input id="main-clima-temp-fin" type="number" step="0.1" class="field-input text-center font-600" value="9.0">
-              </div>
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Humedad Inicial / Final (%)</label>
-              <div class="grid grid-cols-2 gap-1.5">
-                <input id="main-clima-hum-ini" type="number" step="0.1" class="field-input text-center font-600" value="52.0">
-                <input id="main-clima-hum-fin" type="number" step="0.1" class="field-input text-center font-600" value="54.0">
-              </div>
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Viento Máx. (m/s) [&lt; 5 m/s]</label>
-              <input id="main-clima-vmax" type="number" step="0.1" class="field-input w-full font-700 text-center" value="1.5">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Dirección Viento θ (°)</label>
-              <input id="main-clima-vdir" type="number" class="field-input w-full text-center" value="30">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Nubosidad (%)</label>
-              <input id="main-clima-nub" type="number" class="field-input w-full text-center" value="20">
-            </div>
-            <div>
-              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Presencia de Sol</label>
-              <select id="main-clima-sol" class="ac-select w-full">
-                <option value="SI" selected>SÍ (Día soleado / despejado)</option>
-                <option value="NO">NO (Noche o cubierto)</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div> <!-- FIN view-dg -->
-
-  </div> <!-- /main-views-wrapper -->
-</div>
+  </div>
 </div>
 <input type="file" id="off-import-input" accept=".sgsmap,.zip" class="hidden">
 
@@ -2717,7 +2277,77 @@ function cpFieldHTML(f,val,attr){
 }
 function cpHead(f){return CP_HEAD_FIELDS.find(x=>x.k===f);}
 /* --- bloque de cabecera: condiciones del punto --- */
+
+function calcularPropagacionAcustica(ft) {
+  const hm = parseFloat(ft?.cp?.alturaMicro || ft?.fields?.hm || 1.5);
+  const hf = parseFloat(ft?.cp?.fpAltura || ft?.fields?.hf || 6.0);
+  const d = parseFloat(ft?.cp?.distanciaPropiedad || ft?.cp?.fpDistancia || ft?.fields?.distancia || 40.0);
+  const suelo = (ft?.cp?.tipoSuelo || ft?.fields?.suelo || 'DURO').toUpperCase();
+  const orografia = (ft?.cp?.orografia || ft?.fields?.orografia || 'PLANA').toUpperCase();
+  
+  if (isNaN(d) || d <= 0) {
+    return { dictamen: 'FAVORABLE', badgeClass: 'ac-badge-fav', detalle: 'Distancia foco no definida' };
+  }
+  
+  const ratio = (hm + hf) / d;
+  if (ratio >= 0.1) {
+    return {
+      dictamen: 'FAVORABLE',
+      badgeClass: 'ac-badge-fav',
+      detalle: '(hm+hf)/d = ' + ratio.toFixed(3) + ' ≥ 0.100 (Propagación directa favorable)'
+    };
+  }
+  if (suelo === 'DURO' && ratio >= 0.0333) {
+    return {
+      dictamen: 'FAVORABLE',
+      badgeClass: 'ac-badge-fav',
+      detalle: 'Suelo Duro y (hm+hf)/d = ' + ratio.toFixed(3) + ' ≥ 0.033 (Favorable por suelo reflectante)'
+    };
+  }
+  return {
+    dictamen: 'Ver medidas',
+    badgeClass: 'ac-badge-desfav',
+    detalle: '(hm+hf)/d = ' + ratio.toFixed(3) + ' < 0.100. Verificado mediante gradiente meteorológico en pestaña MEDIDAS.'
+  };
+}
+
 function cpHeaderHTML(ft){
+  const cp=ft.cp,g=k=>cpFieldHTML(cpHead(k),cp[k],`data-cph="${k}"`);
+  const res = calcularPropagacionAcustica(ft);
+
+  let h=`<div class="border-t border-sgs-line pt-3">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-700 uppercase text-sgs-orange tracking-wide">Condiciones del Punto de Control (RA)</span>
+      <span class="${res.badgeClass}">${res.dictamen}</span>
+    </div>
+    
+    <div class="bg-amber-50/60 p-2 rounded-lg border border-amber-200/80 text-[10px] text-amber-900 mb-2.5 leading-relaxed">
+      <b>Fórmula O6 / Refracción:</b> ${res.detalle}
+    </div>
+
+    <div class="flex flex-col gap-2">
+      ${g('distanciaPropiedad')}${g('reflexion')}${g('alturaMicro')}${g('tipoSuelo')}${g('orografia')}
+    </div>
+    <div class="mt-3 bg-sgs-panel rounded-lg p-2.5">
+      <div class="text-[11px] font-700 uppercase text-sgs-gray mb-2">Distancia a Fuente Propia (Focos)</div>
+      <div class="flex flex-col gap-2">${g('fpNombre')}${g('fpDistancia')}${g('fpAltura')}</div>
+    </div>
+    <div class="mt-3 bg-sgs-panel rounded-lg p-2.5">
+      <div class="text-[11px] font-700 uppercase text-sgs-gray mb-2">Justificación de Control de Fuentes (C9:C12)</div>
+      <div class="flex flex-col gap-3">`;
+  [1,2,3,4].forEach(i=>{
+    h+=`<div class="bg-white rounded-md p-2 border border-sgs-line flex flex-col gap-2">
+      <div class="text-[10px] font-700 uppercase text-sgs-gray">Fuente ${i}</div>
+      ${cpFieldHTML(cpHead('jc'+i+'n'),ft.cp['jc'+i+'n'],`data-cph="jc${i}n"`)}
+      ${cpFieldHTML(cpHead('jc'+i+'m'),ft.cp['jc'+i+'m'],`data-cph="jc${i}m"`)}
+    </div>`;
+  });
+  h+=`</div></div>
+    <div class="mt-3 flex flex-col gap-2">${g('tipoRecepcion')}${g('duracionMedidas')}</div>
+  </div>`;
+  return h;
+}
+
   const cp=ft.cp,g=k=>cpFieldHTML(cpHead(k),cp[k],`data-cph="${k}"`);
   let h=`<div class="border-t border-sgs-line pt-3">
     <div class="text-[11px] font-700 uppercase text-sgs-orange mb-2 tracking-wide">Condiciones del punto de control</div>
@@ -2816,7 +2446,179 @@ function sgsCleanCP(cp){
   return out;
 }
 
+
 function openEditor(id){
+  editingFeatureId=id;const ft=state.features.find(f=>f.id===id);if(!ft)return;
+  const f=getFolder(ft.folderId);
+  const ed=document.getElementById('editor'),body=document.getElementById('editor-body');
+  ed.classList.replace('hidden','flex');
+  const u=latLonToUTM(centroid(ft.coords).lat,centroid(ft.coords).lon);
+  const typeLbl={point:'Punto',area:'Área',line:'Línea'}[ft.type];
+  
+  const isFoco = (f && /foco/i.test(f.name)) || (ft.name && /^f\d+/i.test(ft.name));
+  const isPuntoControl = isControlFolder(f) || (ft.type === 'point' && !isFoco);
+
+  let html=`
+    <div class="flex items-center gap-2 text-xs">
+      <span class="px-2.5 py-1 rounded-full text-white font-700 text-xs shadow-sm flex items-center gap-1" style="background:${ft.color||(f&&f.color)||'#F36F21'}">${isFoco?'🔥 Foco de Ruido':(isPuntoControl?'🔊 Punto de Control':(ft.type==='area'?'▰ Polígono / Área':typeLbl))}</span>
+      <span class="text-sgs-gray">${f?folderPath(f):''}</span>
+    </div>
+    <div><label class="text-[11px] font-600 uppercase text-sgs-gray">Nombre / Código</label>
+      <input id="e-name" class="field-input mt-1 font-mono font-700 text-sgs-dark" value="${(ft.name||'').replace(/"/g,'&quot;')}"></div>
+    <div><label class="text-[11px] font-600 uppercase text-sgs-gray">Carpeta</label>
+      <select id="e-folder" class="field-input mt-1"></select></div>
+    <div><label class="text-[11px] font-600 uppercase text-sgs-gray">Descripción</label>
+      <textarea id="e-desc" rows="2" class="field-input mt-1">${ft.description||''}</textarea></div>
+    <div class="bg-sgs-panel rounded-lg p-2 text-[11px] font-mono text-sgs-gray">
+      UTM X: <b class="text-sgs-dark">${u.x.toLocaleString('es-ES')}</b> · Y: <b class="text-sgs-dark">${u.y.toLocaleString('es-ES')}</b> · Zona: <b class="text-sgs-dark">${u.zone}${u.band}</b>
+    </div>
+  `;
+
+  // === FICHA ESPECIAL PARA FOCOS DE RUIDO (CON TRAMOS HORARIOS) ===
+  if (isFoco) {
+    ft.fields = ft.fields || {};
+    ft.fields.tramosHorarios = ft.fields.tramosHorarios || [{ iniH: '07', iniM: '00', finH: '19', finM: '00' }];
+    
+    function getHorSummary(tramos) {
+      if (!tramos || !tramos.length) return '24h';
+      if (tramos.length === 1 && tramos[0].iniH === '00' && tramos[0].finH === '24') return '24h';
+      return tramos.map(t => (t.iniH||'07') + ':' + (t.iniM||'00') + '-' + (t.finH||'19') + ':' + (t.finM||'00')).join(' / ');
+    }
+
+    const denom = ft.fields.denominacion || ft.description || '';
+    const proc = ft.fields.proceso || 'General de la actividad';
+    const ident = ft.fields.identificacion || '';
+    const ubic = ft.fields.ubicacion || 'Exterior';
+    const movil = ft.fields.movil || 'NO';
+    const emision = ft.fields.emision || '---';
+    const varTemp = ft.fields.varTemp || 'CONTINUO';
+    const frecPar = ft.fields.frecParadas || 'NO PARA';
+    const durPar = ft.fields.durParadas || 'NO PARA';
+    const summary = getHorSummary(ft.fields.tramosHorarios);
+
+    let tramosRows = '';
+    ft.fields.tramosHorarios.forEach((tr, i) => {
+      tramosRows += `
+        <div class="flex items-center justify-between gap-1 bg-white p-1.5 rounded-lg border border-amber-200">
+          <div class="flex items-center gap-1">
+            <span class="text-[10px] text-sgs-gray font-700">INI:</span>
+            <input type="text" maxlength="2" class="ac-time-slot-box f-ini-h" data-i="${i}" value="${tr.iniH||'07'}">
+            <span class="font-bold">:</span>
+            <input type="text" maxlength="2" class="ac-time-slot-box f-ini-m" data-i="${i}" value="${tr.iniM||'00'}">
+          </div>
+          <div class="flex items-center gap-1">
+            <span class="text-[10px] text-sgs-gray font-700">FIN:</span>
+            <input type="text" maxlength="2" class="ac-time-slot-box f-fin-h" data-i="${i}" value="${tr.finH||'19'}">
+            <span class="font-bold">:</span>
+            <input type="text" maxlength="2" class="ac-time-slot-box f-fin-m" data-i="${i}" value="${tr.finM||'00'}">
+          </div>
+          <button type="button" class="text-rose-600 font-bold px-1.5 py-0.5 rounded hover:bg-rose-50 f-tr-del cursor-pointer" data-i="${i}" title="Eliminar tramo">✕</button>
+        </div>
+      `;
+    });
+
+    html += `
+      <div class="border-t border-amber-300 bg-amber-50/60 p-3 rounded-xl space-y-2.5 my-2 text-xs">
+        <div class="flex items-center justify-between border-b border-amber-200 pb-1.5">
+          <span class="font-700 uppercase tracking-wide text-amber-900">🔥 Datos del Foco de Ruido (RA)</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-700 bg-amber-200 text-amber-900">${ft.name || 'Foco'}</span>
+        </div>
+
+        <div>
+          <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Denominación</label>
+          <input class="ac-input-box f-inp" data-k="denominacion" value="${denom}" placeholder="ej. Compresores, Climatizadoras">
+        </div>
+        <div>
+          <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Proceso Asociado</label>
+          <input class="ac-input-box f-inp" data-k="proceso" value="${proc}" placeholder="ej. Conformado, Pintura">
+        </div>
+        <div>
+          <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Identificación Técnica / Marca / Potencia kW</label>
+          <input class="ac-input-box f-inp" data-k="identificacion" value="${ident}" placeholder="ej. 4 Compresores Atlas Copco 350 kW">
+        </div>
+
+        <!-- TRAMOS HORARIOS -->
+        <div class="bg-white p-2.5 rounded-lg border border-amber-200 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-700 uppercase text-amber-900">⏰ Tramos Horarios</span>
+            <button type="button" id="f-btn-add-tr" class="text-[10px] font-700 bg-amber-100 hover:bg-amber-200 text-amber-900 px-2 py-0.5 rounded border border-amber-300 cursor-pointer">+ Añadir Tramo</button>
+          </div>
+          <div class="flex flex-wrap gap-1">
+            <button type="button" class="f-preset-btn text-[9px] bg-gray-100 px-1.5 py-0.5 rounded hover:bg-amber-100" data-p="24h">24h</button>
+            <button type="button" class="f-preset-btn text-[9px] bg-gray-100 px-1.5 py-0.5 rounded hover:bg-amber-100" data-p="07:00-15:00">07:00-15:00</button>
+            <button type="button" class="f-preset-btn text-[9px] bg-gray-100 px-1.5 py-0.5 rounded hover:bg-amber-100" data-p="07:00-19:00">07:00-19:00</button>
+            <button type="button" class="f-preset-btn text-[9px] bg-gray-100 px-1.5 py-0.5 rounded hover:bg-amber-100" data-p="19:00-23:00">19:00-23:00</button>
+            <button type="button" class="f-preset-btn text-[9px] bg-gray-100 px-1.5 py-0.5 rounded hover:bg-amber-100" data-p="23:00-07:00">23:00-07:00</button>
+          </div>
+          <div id="f-tramos-box" class="space-y-1.5">
+            ${tramosRows}
+          </div>
+          <div class="text-[10px] text-amber-800">
+            <b>Resumen exportable:</b> <span class="font-mono font-600">${summary}</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Ubicación</label>
+            <select class="ac-select-box f-inp" data-k="ubicacion">
+              <option value="Exterior" ${ubic==='Exterior'?'selected':''}>Exterior</option>
+              <option value="Interior" ${ubic==='Interior'?'selected':''}>Interior</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Móvil</label>
+            <select class="ac-select-box f-inp" data-k="movil">
+              <option value="NO" ${movil==='NO'?'selected':''}>NO</option>
+              <option value="SI" ${movil==='SI'?'selected':''}>SI</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Emisión</label>
+            <select class="ac-select-box f-inp" data-k="emision">
+              <option value="---" ${emision==='---'?'selected':''}>---</option>
+              <option value="PA" ${emision==='PA'?'selected':''}>PA</option>
+              <option value="1m" ${emision==='1m'?'selected':''}>1m</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Variabilidad</label>
+            <select class="ac-select-box f-inp" data-k="varTemp">
+              <option value="CONTINUO" ${varTemp==='CONTINUO'?'selected':''}>CONTINUO</option>
+              <option value="ALEATORIO" ${varTemp==='ALEATORIO'?'selected':''}>ALEATORIO</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Frec. Paradas</label>
+            <select class="ac-select-box f-inp" data-k="frecParadas">
+              <option value="NO PARA" ${frecPar==='NO PARA'?'selected':''}>NO PARA</option>
+              <option value="BAJA" ${frecPar==='BAJA'?'selected':''}>BAJA</option>
+              <option value="MODERADA" ${frecPar==='MODERADA'?'selected':''}>MODERADA</option>
+              <option value="ALTA" ${frecPar==='ALTA'?'selected':''}>ALTA</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] text-sgs-gray font-600 block mb-0.5">Dur. Paradas</label>
+            <select class="ac-select-box f-inp" data-k="durParadas">
+              <option value="NO PARA" ${durPar==='NO PARA'?'selected':''}>NO PARA</option>
+              <option value="BAJA" ${durPar==='BAJA'?'selected':''}>BAJA</option>
+              <option value="MODERADA" ${durPar==='MODERADA'?'selected':''}>MODERADA</option>
+              <option value="ALTA" ${durPar==='ALTA'?'selected':''}>ALTA</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  else if (isPuntoControl) {
+    // Asegurar estructura cp
+    cpEnsure(ft, f);
+    html += cpSectionHTML(ft);
+  }
+
   editingFeatureId=id;const ft=state.features.find(f=>f.id===id);if(!ft)return;
   const f=getFolder(ft.folderId);
   const ed=document.getElementById('editor'),body=document.getElementById('editor-body');
@@ -2882,7 +2684,7 @@ function openEditor(id){
   fsel.onchange=()=>{ft.folderId=fsel.value;openEditor(ft.id);renderAll();};
   
 /* ==========================================================================
-   SGS FIELD MAPPER v19.7 - MOTOR ACÚSTICO INTEGRAL Y FORMULACIÓN 17025
+   SGS FIELD MAPPER v19.8 - GESTIÓN MODAL DE EXPEDIENTE & EXPORTADOR 023_RA
    ========================================================================== */
 
 state.acustica = state.acustica || {
@@ -2897,12 +2699,12 @@ state.acustica = state.acustica || {
   indicador: 'Lk,Ti',
   limites: { dia: 70, tarde: 70, noche: 60 },
   descInstalacion: 'La instalación industrial se ubica en el polígono industrial sobre una parcela de 45.000 m², compuesta por una nave principal de producción con cerramiento de panel sándwich de 6 m de altura, zona de almacenamiento exterior y muelles de carga.',
-  procesoTexto: 'RECEPCIÓN DE MATERIAS PRIMAS (MP)\nLa descarga de bobinas de aluminio se realiza en el interior de la nave 1 mediante puente grúa.\n\nLÍNEAS DE PRODUCCIÓN Y PRENSADO (PR)\nEl proceso de conformado de envases opera en continuo mediante bodymakers (F5) y trimmers de corte (F6).\n\nAPLICACIÓN DE PINTURA Y BARNICES (PT)\nAplicación superficial mediante printers rotativas (F7) y hornos de secado (F4).\n\nEXPEDICIÓN Y LOGÍSTICA (EX)\nLa carga de producto final se realiza en interior con carretillas eléctricas. Camiones en parada (F12).\n\nPROCESOS AUXILIARES (AX)\nSala de compresores (F2), torres de refrigeración (F3) y climatización general (F1).',
+  procesoTexto: 'RECEPCIÓN DE MATERIAS PRIMAS (MP)\nDescarga de bobinas de aluminio en interior mediante puente grúa.\n\nLÍNEAS DE PRODUCCIÓN Y PRENSADO (PR)\nConformado en continuo mediante bodymakers (F5) y trimmers (F6).\n\nAPLICACIÓN DE PINTURA Y BARNICES (PT)\nPrinters rotativas (F7) y hornos de secado (F4).\n\nEXPEDICIÓN Y LOGÍSTICA (EX)\nCarga de producto con carretillas eléctricas. Camiones en parada (F12).\n\nPROCESOS AUXILIARES (AX)\nSala de compresores (F2), torres de refrigeración (F3) y climatización (F1).',
   horariosPeriodos: { dia: '7:00-19:00', tarde: '19:00-23:00', noche: '23:00-7:00' },
   fases: [
     { ref: 'FA1', focos: 'F1+F2+F3+F4+F5+F6+F7+F8+F9+F10+F13+F14+F15', diaH: 12, tardeH: 4, nocheH: 8, observ: 'Fase máxima continua' }
   ],
-  justFases: 'Se ha identificado una única fase máxima continua, evaluándose las medidas en los distintos periodos con los valores obtenidos para esta fase.',
+  justFases: 'Se ha identificado una única fase máxima continua, evaluándose las medidas con los valores obtenidos para esta fase.',
   tecnicos: { responsable: 'David de la Peña Martínez', apoyo: 'Rubén García Mingo' },
   equipos: {
     sonometro: { serie: 'BRÜEL & KJÆR 2250 (Nº 3012334)', calib: 'Calib: 29/11/2023 - Vence: 29/11/2025' },
@@ -2913,160 +2715,152 @@ state.acustica = state.acustica || {
   clima: { tempIni: 17.0, tempFin: 9.0, humIni: 52.0, humFin: 54.0, vmax: 1.5, vdir: 30, nub: 20, sol: 'SI' }
 };
 
-function calcularPropagacionAcustica(ft) {
-  const hm = parseFloat(ft?.fields?.hm || 1.5);
-  const hf = parseFloat(ft?.fields?.hf || 6.0);
-  const d = parseFloat(ft?.fields?.distancia || ft?.fields?.d || 40.0);
-  const suelo = (ft?.fields?.suelo || 'DURO').toUpperCase();
-  const orografia = (ft?.fields?.orografia || 'PLANA').toUpperCase();
-  
-  if (isNaN(d) || d <= 0) {
-    return { dictamen: 'FAVORABLE', badgeClass: 'ac-badge-fav', detalle: 'Distancia foco no definida' };
-  }
-  
-  const ratio = (hm + hf) / d;
-  if (ratio >= 0.1) {
-    return {
-      dictamen: 'FAVORABLE',
-      badgeClass: 'ac-badge-fav',
-      detalle: '(hm+hf)/d = ' + ratio.toFixed(3) + ' ≥ 0.100 (Propagación directa favorable)'
-    };
-  }
-  if (suelo === 'DURO' && ratio >= 0.0333) {
-    return {
-      dictamen: 'FAVORABLE',
-      badgeClass: 'ac-badge-fav',
-      detalle: 'Suelo Duro y (hm+hf)/d = ' + ratio.toFixed(3) + ' ≥ 0.033 (Favorable por suelo reflectante)'
-    };
-  }
-  return {
-    dictamen: 'Ver medidas',
-    badgeClass: 'ac-badge-desfav',
-    detalle: '(hm+hf)/d = ' + ratio.toFixed(3) + ' < 0.100. Verificado mediante gradiente meteorológico en pestaña MEDIDAS.'
-  };
-}
-
-window.switchMainView = function(viewId) {
-  document.querySelectorAll('.main-nav-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.main-view').forEach(v => {
-    v.classList.add('hidden');
-    v.style.display = 'none';
-  });
-  
-  const targetBtn = document.querySelector(`.main-nav-btn[data-view="${viewId}"]`);
-  const targetView = document.getElementById(viewId);
-  
-  if (targetBtn) targetBtn.classList.add('active');
-  if (targetView) {
-    targetView.classList.remove('hidden');
-    targetView.style.display = (viewId === 'view-map' ? 'flex' : 'block');
-  }
-  
-  if (viewId === 'view-map') {
-    if (window.map) setTimeout(() => window.map.invalidateSize(), 150);
-  }
-  if (viewId === 'view-dg') syncDGViewFields();
-  if (viewId === 'view-proc') { syncDGViewFields(); renderMainProcFocosChips(); }
-  if (viewId === 'view-fases') { syncDGViewFields(); renderMainFasesTable(); }
-  if (viewId === 'view-clima') syncDGViewFields();
+window.openModalAcustica = function(tabId) {
+  const wrap = document.getElementById('modal-acustica-wrap');
+  if (!wrap) return;
+  wrap.classList.add('active');
+  syncModalFields();
+  window.switchModalTab(tabId || 'tab-dg');
 };
 
-function syncDGViewFields() {
-  const ac = state.acustica;
-  const dgExp = document.getElementById('main-dg-expediente');
-  if (dgExp) {
-    dgExp.value = ac.expediente || '';
-    document.getElementById('main-dg-cliente').value = ac.cliente || '';
-    document.getElementById('main-dg-instalacion').value = ac.instalacion || '';
-    document.getElementById('main-dg-direccion').value = ac.direccion || '';
-    document.getElementById('main-dg-cnae').value = ac.cnae || '';
-    document.getElementById('main-dg-aai').value = ac.aai || '';
-    document.getElementById('main-dg-objetivo').value = ac.objetivo || 'Evaluación de conformidad a la normativa de referencia';
-    document.getElementById('main-dg-norma-just').value = ac.normaJust || 'Al contar la instalación con autorización ambiental, esta es la normativa de aplicación';
-    document.getElementById('main-dg-desc-inst').value = ac.descInstalacion || '';
-    document.getElementById('main-dg-indicador').value = ac.indicador || 'Lk,Ti';
-    document.getElementById('main-dg-lim-dia').value = ac.limites.dia || 70;
-    document.getElementById('main-dg-lim-tarde').value = ac.limites.tarde || 70;
-    document.getElementById('main-dg-lim-noche').value = ac.limites.noche || 60;
+window.closeModalAcustica = function() {
+  const wrap = document.getElementById('modal-acustica-wrap');
+  if (wrap) wrap.classList.remove('active');
+  scheduleAutoSave();
+};
+
+window.switchModalTab = function(tabId) {
+  document.querySelectorAll('.modal-tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.modal-tab-content').forEach(c => {
+    c.classList.add('hidden');
+    c.style.display = 'none';
+  });
+  
+  const targetBtn = document.querySelector(`.modal-tab-btn[data-tab="${tabId}"]`);
+  const targetContent = document.getElementById(tabId);
+  
+  if (targetBtn) targetBtn.classList.add('active');
+  if (targetContent) {
+    targetContent.classList.remove('hidden');
+    targetContent.style.display = 'block';
   }
   
-  const pTxt = document.getElementById('main-proc-texto');
-  if (pTxt) pTxt.value = ac.procesoTexto || '';
+  if (tabId === 'tab-proc') renderModalProcFocosChips();
+  if (tabId === 'tab-fases') renderModalFasesTable();
+};
 
-  const fDia = document.getElementById('main-fases-hora-dia');
-  if (fDia) {
-    fDia.value = ac.horariosPeriodos?.dia || '7:00-19:00';
-    document.getElementById('main-fases-hora-tarde').value = ac.horariosPeriodos?.tarde || '19:00-23:00';
-    document.getElementById('main-fases-hora-noche').value = ac.horariosPeriodos?.noche || '23:00-7:00';
-    document.getElementById('main-fases-just').value = ac.justFases || '';
-  }
+function syncModalFields() {
+  const ac = state.acustica;
+  const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = (val !== undefined ? val : ''); };
 
-  const cResp = document.getElementById('main-clima-tec-resp');
-  if (cResp) {
-    cResp.value = ac.tecnicos.responsable || '';
-    document.getElementById('main-clima-tec-apoyo').value = ac.tecnicos.apoyo || '';
-    document.getElementById('main-clima-sono-serie').value = ac.equipos.sonometro.serie || '';
-    document.getElementById('main-clima-sono-calib').value = ac.equipos.sonometro.calib || '';
-    document.getElementById('main-clima-calib-serie').value = ac.equipos.calibrador.serie || '';
-    document.getElementById('main-clima-calib-calib').value = ac.equipos.calibrador.calib || '';
-    document.getElementById('main-clima-anem-serie').value = ac.equipos.anemometro.serie || '';
-    document.getElementById('main-clima-anem-calib').value = ac.equipos.anemometro.calib || '';
-    document.getElementById('main-clima-patron').value = ac.calibracion.patron || 93.91;
-    document.getElementById('main-clima-inicial').value = ac.calibracion.inicial || 93.87;
-    document.getElementById('main-clima-inter').value = ac.calibracion.intermedia || 93.86;
-    document.getElementById('main-clima-final').value = ac.calibracion.final || 93.83;
-    document.getElementById('main-clima-temp-ini').value = ac.clima.tempIni || 17.0;
-    document.getElementById('main-clima-temp-fin').value = ac.clima.tempFin || 9.0;
-    document.getElementById('main-clima-hum-ini').value = ac.clima.humIni || 52.0;
-    document.getElementById('main-clima-hum-fin').value = ac.clima.humFin || 54.0;
-    document.getElementById('main-clima-vmax').value = ac.clima.vmax || 1.5;
-    document.getElementById('main-clima-vdir').value = ac.clima.vdir || 30;
-    document.getElementById('main-clima-nub').value = ac.clima.nub || 20;
-    document.getElementById('main-clima-sol').value = ac.clima.sol || 'SI';
-  }
+  setV('ac-expediente', ac.expediente);
+  setV('ac-cliente', ac.cliente);
+  setV('ac-instalacion', ac.instalacion);
+  setV('ac-direccion', ac.direccion);
+  setV('ac-cnae', ac.cnae);
+  setV('ac-aai', ac.aai);
+  setV('ac-objetivo', ac.objetivo);
+  setV('ac-norma-just', ac.normaJust);
+  setV('ac-desc-inst', ac.descInstalacion);
+  setV('ac-indicador', ac.indicador);
+  setV('ac-lim-dia', ac.limites?.dia);
+  setV('ac-lim-tarde', ac.limites?.tarde);
+  setV('ac-lim-noche', ac.limites?.noche);
+
+  setV('ac-proc-texto', ac.procesoTexto);
+
+  setV('ac-fases-hora-dia', ac.horariosPeriodos?.dia);
+  setV('ac-fases-hora-tarde', ac.horariosPeriodos?.tarde);
+  setV('ac-fases-hora-noche', ac.horariosPeriodos?.noche);
+  setV('ac-fases-just', ac.justFases);
+
+  setV('ac-tec-resp', ac.tecnicos?.responsable);
+  setV('ac-tec-apoyo', ac.tecnicos?.apoyo);
+  setV('ac-sono-serie', ac.equipos?.sonometro?.serie);
+  setV('ac-sono-calib', ac.equipos?.sonometro?.calib);
+  setV('ac-calib-serie', ac.equipos?.calibrador?.serie);
+  setV('ac-calib-calib', ac.equipos?.calibrador?.calib);
+  setV('ac-anem-serie', ac.equipos?.anemometro?.serie);
+  setV('ac-anem-calib', ac.equipos?.anemometro?.calib);
+
+  setV('ac-cal-patron', ac.calibracion?.patron);
+  setV('ac-cal-ini', ac.calibracion?.inicial);
+  setV('ac-cal-inter', ac.calibracion?.intermedia);
+  setV('ac-cal-fin', ac.calibracion?.final);
+
+  setV('ac-temp-ini', ac.clima?.tempIni);
+  setV('ac-temp-fin', ac.clima?.tempFin);
+  setV('ac-hum-ini', ac.clima?.humIni);
+  setV('ac-hum-fin', ac.clima?.humFin);
+  setV('ac-vmax', ac.clima?.vmax);
+  setV('ac-vdir', ac.clima?.vdir);
+  setV('ac-nub', ac.clima?.nub);
+  setV('ac-sol', ac.clima?.sol);
 }
 
-function bindDGViewEvents() {
-  const saveDG = () => {
-    state.acustica.expediente = document.getElementById('main-dg-expediente').value;
-    state.acustica.cliente = document.getElementById('main-dg-cliente').value;
-    state.acustica.instalacion = document.getElementById('main-dg-instalacion').value;
-    state.acustica.direccion = document.getElementById('main-dg-direccion').value;
-    state.acustica.cnae = document.getElementById('main-dg-cnae').value;
-    state.acustica.aai = document.getElementById('main-dg-aai').value;
-    state.acustica.objetivo = document.getElementById('main-dg-objetivo').value;
-    state.acustica.normaJust = document.getElementById('main-dg-norma-just').value;
-    state.acustica.descInstalacion = document.getElementById('main-dg-desc-inst').value;
-    state.acustica.indicador = document.getElementById('main-dg-indicador').value;
-    state.acustica.limites.dia = parseFloat(document.getElementById('main-dg-lim-dia').value);
-    state.acustica.limites.tarde = parseFloat(document.getElementById('main-dg-lim-tarde').value);
-    state.acustica.limites.noche = parseFloat(document.getElementById('main-dg-lim-noche').value);
+function bindModalEvents() {
+  const saveAll = () => {
+    const ac = state.acustica;
+    const getV = id => document.getElementById(id)?.value || '';
+
+    ac.expediente = getV('ac-expediente');
+    ac.cliente = getV('ac-cliente');
+    ac.instalacion = getV('ac-instalacion');
+    ac.direccion = getV('ac-direccion');
+    ac.cnae = getV('ac-cnae');
+    ac.aai = getV('ac-aai');
+    ac.objetivo = getV('ac-objetivo');
+    ac.normaJust = getV('ac-norma-just');
+    ac.descInstalacion = getV('ac-desc-inst');
+    ac.indicador = getV('ac-indicador');
+    ac.limites.dia = parseFloat(getV('ac-lim-dia')) || 70;
+    ac.limites.tarde = parseFloat(getV('ac-lim-tarde')) || 70;
+    ac.limites.noche = parseFloat(getV('ac-lim-noche')) || 60;
+
+    ac.procesoTexto = getV('ac-proc-texto');
+
+    ac.horariosPeriodos.dia = getV('ac-fases-hora-dia');
+    ac.horariosPeriodos.tarde = getV('ac-fases-hora-tarde');
+    ac.horariosPeriodos.noche = getV('ac-fases-hora-noche');
+    ac.justFases = getV('ac-fases-just');
+
+    ac.tecnicos.responsable = getV('ac-tec-resp');
+    ac.tecnicos.apoyo = getV('ac-tec-apoyo');
+    ac.equipos.sonometro.serie = getV('ac-sono-serie');
+    ac.equipos.sonometro.calib = getV('ac-sono-calib');
+    ac.equipos.calibrador.serie = getV('ac-calib-serie');
+    ac.equipos.calibrador.calib = getV('ac-calib-calib');
+    ac.equipos.anemometro.serie = getV('ac-anem-serie');
+    ac.equipos.anemometro.calib = getV('ac-anem-calib');
+
+    ac.calibracion.patron = parseFloat(getV('ac-cal-patron')) || 93.91;
+    ac.calibracion.inicial = parseFloat(getV('ac-cal-ini')) || 93.87;
+    ac.calibracion.intermedia = parseFloat(getV('ac-cal-inter')) || 93.86;
+    ac.calibracion.final = parseFloat(getV('ac-cal-fin')) || 93.83;
+
+    ac.clima.tempIni = parseFloat(getV('ac-temp-ini')) || 17;
+    ac.clima.tempFin = parseFloat(getV('ac-temp-fin')) || 9;
+    ac.clima.humIni = parseFloat(getV('ac-hum-ini')) || 52;
+    ac.clima.humFin = parseFloat(getV('ac-hum-fin')) || 54;
+    ac.clima.vmax = parseFloat(getV('ac-vmax')) || 1.5;
+    ac.clima.vdir = parseFloat(getV('ac-vdir')) || 30;
+    ac.clima.nub = parseFloat(getV('ac-nub')) || 20;
+    ac.clima.sol = getV('ac-sol');
     scheduleAutoSave();
   };
 
-  ['main-dg-expediente', 'main-dg-cliente', 'main-dg-instalacion', 'main-dg-direccion', 'main-dg-cnae', 'main-dg-aai', 'main-dg-desc-inst', 'main-dg-lim-dia', 'main-dg-lim-tarde', 'main-dg-lim-noche'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.oninput = saveDG;
+  document.querySelectorAll('#modal-acustica-wrap input, #modal-acustica-wrap select, #modal-acustica-wrap textarea').forEach(el => {
+    el.oninput = el.onchange = saveAll;
   });
-  ['main-dg-objetivo', 'main-dg-norma-just', 'main-dg-indicador'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.onchange = saveDG;
-  });
-
-  const pTxt = document.getElementById('main-proc-texto');
-  if (pTxt) pTxt.oninput = () => { state.acustica.procesoTexto = pTxt.value; scheduleAutoSave(); };
-
-  const fJust = document.getElementById('main-fases-just');
-  if (fJust) fJust.oninput = () => { state.acustica.justFases = fJust.value; scheduleAutoSave(); };
 
   document.querySelectorAll('.ac-preset-btn').forEach(btn => {
     btn.onclick = () => {
       const [d, t, n] = btn.dataset.lim.split(',');
-      document.getElementById('main-dg-lim-dia').value = d;
-      document.getElementById('main-dg-lim-tarde').value = t;
-      document.getElementById('main-dg-lim-noche').value = n;
-      saveDG();
-      toast('Límites normativos cargados: ' + d + ' / ' + t + ' / ' + n + ' dBA', 'info');
+      document.getElementById('ac-lim-dia').value = d;
+      document.getElementById('ac-lim-tarde').value = t;
+      document.getElementById('ac-lim-noche').value = n;
+      saveAll();
+      toast('Límites cargados: ' + d + ' / ' + t + ' / ' + n + ' dBA', 'info');
     };
   });
 }
@@ -3082,13 +2876,13 @@ function setupVoiceDictation(btnId, textareaId) {
 
   btn.onclick = () => {
     if (!SpeechRec) {
-      toast('Dictado por voz no disponible en este navegador. Usa Chrome o Edge.', 'error');
+      toast('Dictado por voz no soportado en este navegador. Usa Chrome o Edge.', 'error');
       return;
     }
     if (isRec) {
       if (rec) rec.stop();
       isRec = false;
-      btn.className = 'bg-sgs-orange/10 hover:bg-sgs-orange hover:text-white text-sgs-orange px-3.5 py-1.5 rounded-lg font-700 flex items-center gap-1.5 border border-sgs-orange/30 transition-all text-xs cursor-pointer';
+      btn.className = 'topbtn-acustica text-xs py-1';
       btn.innerHTML = '🎙️ Dictar por Voz';
       toast('Dictado finalizado.', 'info');
       return;
@@ -3101,7 +2895,7 @@ function setupVoiceDictation(btnId, textareaId) {
 
     rec.onstart = () => {
       isRec = true;
-      btn.className = 'bg-rose-600 text-white px-3.5 py-1.5 rounded-lg font-700 flex items-center gap-1.5 border border-rose-700 animate-pulse text-xs cursor-pointer';
+      btn.className = 'bg-rose-600 text-white font-700 text-xs px-3 py-1 rounded-lg animate-pulse';
       btn.innerHTML = '🔴 Escuchando... (Toca para parar)';
       toast('Micrófono activado. Dicta ahora...', 'success');
     };
@@ -3121,13 +2915,13 @@ function setupVoiceDictation(btnId, textareaId) {
 
     rec.onerror = () => {
       isRec = false;
-      btn.className = 'bg-sgs-orange/10 hover:bg-sgs-orange hover:text-white text-sgs-orange px-3.5 py-1.5 rounded-lg font-700 flex items-center gap-1.5 border border-sgs-orange/30 transition-all text-xs cursor-pointer';
+      btn.className = 'topbtn-acustica text-xs py-1';
       btn.innerHTML = '🎙️ Dictar por Voz';
     };
 
     rec.onend = () => {
       isRec = false;
-      btn.className = 'bg-sgs-orange/10 hover:bg-sgs-orange hover:text-white text-sgs-orange px-3.5 py-1.5 rounded-lg font-700 flex items-center gap-1.5 border border-sgs-orange/30 transition-all text-xs cursor-pointer';
+      btn.className = 'topbtn-acustica text-xs py-1';
       btn.innerHTML = '🎙️ Dictar por Voz';
     };
 
@@ -3135,8 +2929,8 @@ function setupVoiceDictation(btnId, textareaId) {
   };
 }
 
-function renderMainProcFocosChips() {
-  const container = document.getElementById('main-proc-focos-chips');
+function renderModalProcFocosChips() {
+  const container = document.getElementById('modal-proc-focos-chips');
   if (!container) return;
   container.innerHTML = '';
   
@@ -3146,10 +2940,10 @@ function renderMainProcFocosChips() {
   list.forEach(fn => {
     const btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'px-2.5 py-1 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded-lg text-xs font-700 shadow-2xs transition-all cursor-pointer';
+    btn.className = 'px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded text-xs font-700 cursor-pointer';
     btn.textContent = '+' + fn;
     btn.onclick = () => {
-      const textarea = document.getElementById('main-proc-texto');
+      const textarea = document.getElementById('ac-proc-texto');
       const p = textarea.selectionStart || textarea.value.length;
       textarea.value = textarea.value.substring(0, p) + '(' + fn + ') ' + textarea.value.substring(p);
       textarea.selectionStart = textarea.selectionEnd = p + fn.length + 3;
@@ -3160,9 +2954,9 @@ function renderMainProcFocosChips() {
   });
 }
 
-document.getElementById('btn-insert-template-main')?.addEventListener('click', () => {
-  const sel = document.getElementById('main-proc-template-select');
-  const textarea = document.getElementById('main-proc-texto');
+document.getElementById('btn-insert-template-modal')?.addEventListener('click', () => {
+  const sel = document.getElementById('modal-proc-template-select');
+  const textarea = document.getElementById('ac-proc-texto');
   if (sel && sel.value && textarea) {
     const p = textarea.selectionStart || textarea.value.length;
     textarea.value = textarea.value.substring(0, p) + sel.value + textarea.value.substring(p);
@@ -3173,8 +2967,8 @@ document.getElementById('btn-insert-template-main')?.addEventListener('click', (
   }
 });
 
-function renderMainFasesTable() {
-  const tbody = document.getElementById('main-tbody-fases');
+function renderModalFasesTable() {
+  const tbody = document.getElementById('modal-tbody-fases');
   if (!tbody) return;
   tbody.innerHTML = '';
   
@@ -3183,42 +2977,42 @@ function renderMainFasesTable() {
     const tr = document.createElement('tr');
     tr.className = 'hover:bg-gray-50';
     tr.innerHTML = `
-      <td class="p-3 text-center font-700 text-sgs-orange">${fa.ref || ('FA' + (idx + 1))}</td>
-      <td class="p-3">
-        <input class="field-input w-full font-mono text-xs main-fa-focos" data-idx="${idx}" value="${fa.focos || ''}">
+      <td class="p-2.5 text-center font-700 text-sgs-orange">${fa.ref || ('FA' + (idx + 1))}</td>
+      <td class="p-2.5">
+        <input class="ac-input-box font-mono text-xs mf-focos" data-idx="${idx}" value="${fa.focos || ''}">
       </td>
-      <td class="p-3 text-center">
-        <input type="number" class="field-input text-center w-16 h-8 text-xs font-700 main-fa-d" data-idx="${idx}" value="${fa.diaH !== undefined ? fa.diaH : 12}">
+      <td class="p-2.5 text-center">
+        <input type="number" class="ac-input-box text-center w-14 h-7 text-xs font-700 mf-d" data-idx="${idx}" value="${fa.diaH !== undefined ? fa.diaH : 12}">
       </td>
-      <td class="p-3 text-center">
-        <input type="number" class="field-input text-center w-16 h-8 text-xs font-700 main-fa-t" data-idx="${idx}" value="${fa.tardeH !== undefined ? fa.tardeH : 4}">
+      <td class="p-2.5 text-center">
+        <input type="number" class="ac-input-box text-center w-14 h-7 text-xs font-700 mf-t" data-idx="${idx}" value="${fa.tardeH !== undefined ? fa.tardeH : 4}">
       </td>
-      <td class="p-3 text-center">
-        <input type="number" class="field-input text-center w-16 h-8 text-xs font-700 main-fa-n" data-idx="${idx}" value="${fa.nocheH !== undefined ? fa.nocheH : 8}">
+      <td class="p-2.5 text-center">
+        <input type="number" class="ac-input-box text-center w-14 h-7 text-xs font-700 mf-n" data-idx="${idx}" value="${fa.nocheH !== undefined ? fa.nocheH : 8}">
       </td>
-      <td class="p-3">
-        <input class="field-input w-full text-xs main-fa-obs" data-idx="${idx}" value="${fa.observ || 'Fase continua'}">
+      <td class="p-2.5">
+        <input class="ac-input-box text-xs mf-obs" data-idx="${idx}" value="${fa.observ || 'Fase continua'}">
       </td>
-      <td class="p-3 text-center">
-        <button type="button" class="text-rose-600 hover:text-rose-800 font-bold p-1 main-fa-del cursor-pointer" data-idx="${idx}">✕</button>
+      <td class="p-2.5 text-center">
+        <button type="button" class="text-rose-600 hover:text-rose-800 font-bold p-1 mf-del cursor-pointer" data-idx="${idx}">✕</button>
       </td>
     `;
     tbody.appendChild(tr);
   });
 
-  tbody.querySelectorAll('.main-fa-focos').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].focos = e.target.value; scheduleAutoSave(); });
-  tbody.querySelectorAll('.main-fa-d').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].diaH = +e.target.value; scheduleAutoSave(); });
-  tbody.querySelectorAll('.main-fa-t').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].tardeH = +e.target.value; scheduleAutoSave(); });
-  tbody.querySelectorAll('.main-fa-n').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].nocheH = +e.target.value; scheduleAutoSave(); });
-  tbody.querySelectorAll('.main-fa-obs').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].observ = e.target.value; scheduleAutoSave(); });
-  tbody.querySelectorAll('.main-fa-del').forEach(btn => btn.onclick = e => {
+  tbody.querySelectorAll('.mf-focos').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].focos = e.target.value; scheduleAutoSave(); });
+  tbody.querySelectorAll('.mf-d').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].diaH = +e.target.value; scheduleAutoSave(); });
+  tbody.querySelectorAll('.mf-t').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].tardeH = +e.target.value; scheduleAutoSave(); });
+  tbody.querySelectorAll('.mf-n').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].nocheH = +e.target.value; scheduleAutoSave(); });
+  tbody.querySelectorAll('.mf-obs').forEach(inp => inp.oninput = e => { state.acustica.fases[+e.target.dataset.idx].observ = e.target.value; scheduleAutoSave(); });
+  tbody.querySelectorAll('.mf-del').forEach(btn => btn.onclick = e => {
     state.acustica.fases.splice(+e.target.dataset.idx, 1);
     scheduleAutoSave();
-    renderMainFasesTable();
+    renderModalFasesTable();
   });
 }
 
-document.getElementById('btn-add-fase-manual-main')?.addEventListener('click', () => {
+document.getElementById('btn-add-fase-modal')?.addEventListener('click', () => {
   state.acustica.fases = state.acustica.fases || [];
   const nextNum = state.acustica.fases.length + 1;
   state.acustica.fases.push({
@@ -3230,10 +3024,10 @@ document.getElementById('btn-add-fase-manual-main')?.addEventListener('click', (
     observ: 'Fase operativa'
   });
   scheduleAutoSave();
-  renderMainFasesTable();
+  renderModalFasesTable();
 });
 
-document.getElementById('btn-auto-fases-main')?.addEventListener('click', () => {
+document.getElementById('btn-auto-fases-modal')?.addEventListener('click', () => {
   const focos = state.features.filter(f => (f.name && /^f\d+/i.test(f.name)) || (state.folders.find(fo => fo.id === f.folderId && /foco/i.test(fo.name))));
   if (focos.length === 0) {
     state.acustica.fases = [
@@ -3246,15 +3040,16 @@ document.getElementById('btn-auto-fases-main')?.addEventListener('click', () => 
     ];
   }
   scheduleAutoSave();
-  renderMainFasesTable();
-  toast('Fases agrupadas automáticamente a partir de los focos creados.', 'success');
+  renderModalFasesTable();
+  toast('Fases agrupadas automáticamente.', 'success');
 });
 
+// EXPORTADOR OFICIAL EXCEL 023_RA
 window.exportar023RA = async function() {
   toast('Generando Hoja de Campo 023_RA oficial...', 'info');
   try {
     const workbook = new ExcelJS.Workbook();
-    workbook.creator = 'SGS TECNOS - Field Mapper v19.7';
+    workbook.creator = 'SGS TECNOS - Field Mapper v19.8';
     workbook.created = new Date();
 
     const wsRev = workbook.addWorksheet('REV');
@@ -3296,12 +3091,14 @@ window.exportar023RA = async function() {
     
     const focos = state.features.filter(f => (f.name && /^f\d+/i.test(f.name)) || (state.folders.find(fo => fo.id === f.folderId && /foco/i.test(fo.name))));
     focos.forEach(fc => {
+      const tramos = fc.fields?.tramosHorarios || [];
+      const horSum = (tramos.length > 0) ? tramos.map(t => (t.iniH||'07')+':'+(t.iniM||'00')+'-'+(t.finH||'19')+':'+(t.finM||'00')).join(' / ') : (fc.fields?.horarios || '24h');
       wsDG.addRow([
         fc.name || 'Foco',
         fc.fields?.denominacion || fc.description || '---',
         fc.fields?.proceso || 'General de la actividad',
         fc.fields?.identificacion || '---',
-        fc.fields?.horarios || '24h',
+        horSum,
         fc.fields?.ubicacion || 'Exterior',
         fc.fields?.movil || 'NO',
         fc.fields?.emision || '---',
@@ -3322,15 +3119,16 @@ window.exportar023RA = async function() {
     const puntos = state.features.filter(f => f.type === 'point' && !(f.name && /^f\d+/i.test(f.name)));
     puntos.forEach(p => {
       const res = calcularPropagacionAcustica(p);
+      const dist = p.cp?.distanciaPropiedad || p.cp?.fpDistancia || p.fields?.distancia || 40;
       wsMed.addRow([
         p.name || 'Punto',
-        p.fields?.periodo || 'DIA',
-        p.fields?.fase || 'FA1',
+        p.cp?.medidas?.[0]?.periodo || 'DIA',
+        p.cp?.medidas?.[0]?.fase || 'FA1',
         state.acustica.clima.vmax,
         state.acustica.clima.vdir,
         state.acustica.clima.nub,
         state.acustica.clima.sol,
-        p.fields?.distancia || p.fields?.d || 40,
+        dist,
         res.dictamen
       ]);
     });
@@ -3342,20 +3140,34 @@ window.exportar023RA = async function() {
       wsP.addRow([p.name || 'PUNTO DE CONTROL']);
       wsP.addRow(['Distancia límite (m)', 'Reflexión', 'Altura Micro (m)', 'Tipo Suelo', 'Orografía', 'Condiciones Propagación']);
       wsP.addRow([
-        p.fields?.distancia || 1.5,
-        p.fields?.reflexion || 'NO',
-        p.fields?.hm || 1.5,
-        p.fields?.suelo || 'DURO',
-        p.fields?.orografia || 'PLANA',
+        p.cp?.distanciaPropiedad || 1.5,
+        p.cp?.reflexion || 'NO',
+        p.cp?.alturaMicro || 1.5,
+        p.cp?.tipoSuelo || 'DURO',
+        p.cp?.orografia || 'PLANA',
         res.dictamen
       ]);
       wsP.addRow([]);
-      wsP.addRow(['Tipo Recepción:', p.fields?.recepcion || 'Continuo']);
-      wsP.addRow(['Duración Medidas:', p.fields?.duracion || '5 s']);
-      wsP.addRow(['Control de Fuentes:', p.fields?.controlFuentes || 'Verificado antes del inicio']);
-      wsP.addRow(['Ruido de Fondo:', p.fields?.justFondo || 'Medidas con actividad parada']);
-      wsP.addRow([]);
+      wsP.addRow(['Tipo Recepción:', p.cp?.tipoRecepcion || 'CONTINUO']);
+      wsP.addRow(['Duración Medidas:', p.cp?.duracionMedidas || '5 s']);
       wsP.addRow(['Detalle de Cálculo:', res.detalle]);
+      wsP.addRow([]);
+      wsP.addRow(['REGISTRO DE MEDIDAS DEL PUNTO:']);
+      wsP.addRow(['Medida', 'Fase', 'Periodo', 'Registro', 'V. Viento', 'Dir. Viento', 'Nubosidad', 'Sol', 'Valor (dBA)', 'Observaciones']);
+      (p.cp?.medidas || []).forEach((m, mIdx) => {
+        wsP.addRow([
+          'Medida ' + (mIdx + 1),
+          m.fase || '',
+          m.periodo || '',
+          m.registro || '',
+          m.velViento || '',
+          m.dirViento || '',
+          m.nubosidad || '',
+          m.sol || '',
+          m.valor || '',
+          m.observaciones || ''
+        ]);
+      });
     });
 
     const buffer = await workbook.xlsx.writeBuffer();
@@ -3369,11 +3181,10 @@ window.exportar023RA = async function() {
 };
 
 setTimeout(() => {
-  syncDGViewFields();
-  bindDGViewEvents();
-  setupVoiceDictation('btn-voice-inst', 'main-dg-desc-inst');
-  setupVoiceDictation('btn-voice-proc-main', 'main-proc-texto');
-  renderMainFasesTable();
+  syncModalFields();
+  bindModalEvents();
+  setupVoiceDictation('btn-voice-inst-modal', 'ac-desc-inst');
+  setupVoiceDictation('btn-voice-proc-modal', 'ac-proc-texto');
 }, 200);
 
 // v14 FIX: evita error JS si no existen #e-color/#e-opacity tras separar relleno de áreas.
@@ -3386,322 +3197,49 @@ setTimeout(() => {
   body.querySelector('#e-desc').oninput=e=>{ft.description=e.target.value;scheduleAutoSave();};
   body.querySelectorAll('.e-field').forEach(el=>el.oninput=()=>{ft.fields=ft.fields||{};ft.fields[el.dataset.fid]=el.value;scheduleAutoSave();});
   
-  if(_isCP)cpBind(ft,body);
-  
-  const currentFolder = state.folders.find(f => f.id === ft.folderId);
-  const isFoco = (currentFolder && /foco/i.test(currentFolder.name)) || (ft.name && /^f\d+/i.test(ft.name));
+  if (isPuntoControl) cpBind(ft, body);
   
   if (isFoco) {
-    const focoCard = document.createElement('div');
-    focoCard.className = 'border border-amber-300 bg-[#fffdfa] p-3.5 rounded-xl flex flex-col gap-3 my-3 shadow-xs';
-    
-    ft.fields = ft.fields || {};
-    ft.fields.tramosHorarios = ft.fields.tramosHorarios || [{ iniH: '07', iniM: '00', finH: '19', finM: '00' }];
-    
-    function getHorariosSummary(tramos) {
-      if (!tramos || tramos.length === 0) return '24h';
-      if (tramos.length === 1 && tramos[0].iniH === '00' && tramos[0].finH === '24') return '24h';
-      return tramos.map(t => (t.iniH||'07') + ':' + (t.iniM||'00') + '-' + (t.finH||'19') + ':' + (t.finM||'00')).join(' / ');
-    }
-    
-    function renderFocoCard() {
-      const denom = ft.fields?.denominacion || ft.description || '';
-      const proc = ft.fields?.proceso || 'General de la actividad';
-      const ident = ft.fields?.identificacion || '';
-      const ubic = (ft.fields?.ubicacion || 'Exterior');
-      const movil = (ft.fields?.movil || 'NO');
-      const emision = (ft.fields?.emision || '---');
-      const varTemp = (ft.fields?.varTemp || 'CONTINUO');
-      const frecPar = (ft.fields?.frecParadas || 'NO PARA');
-      const durPar = (ft.fields?.durParadas || 'NO PARA');
-      const summaryHor = getHorariosSummary(ft.fields.tramosHorarios);
-      
-      let tramosHtml = '';
-      ft.fields.tramosHorarios.forEach((tr, i) => {
-        tramosHtml += `
-          <div class="flex items-center justify-between gap-1.5 bg-white p-2 rounded-lg border border-amber-200">
-            <div class="flex items-center gap-1">
-              <span class="text-[10px] text-sgs-gray font-700">INICIO:</span>
-              <input type="text" maxlength="2" class="ac-time-box tr-ini-h" data-i="${i}" value="${tr.iniH || '07'}" placeholder="07">
-              <span class="font-bold">:</span>
-              <input type="text" maxlength="2" class="ac-time-box tr-ini-m" data-i="${i}" value="${tr.iniM || '00'}" placeholder="00">
-            </div>
-            <div class="flex items-center gap-1">
-              <span class="text-[10px] text-sgs-gray font-700">FINAL:</span>
-              <input type="text" maxlength="2" class="ac-time-box tr-fin-h" data-i="${i}" value="${tr.finH || '19'}" placeholder="19">
-              <span class="font-bold">:</span>
-              <input type="text" maxlength="2" class="ac-time-box tr-fin-m" data-i="${i}" value="${tr.finM || '00'}" placeholder="00">
-            </div>
-            <button type="button" class="text-rose-600 hover:text-rose-800 font-bold p-1 tr-del-btn cursor-pointer" data-i="${i}" title="Eliminar tramo">✕</button>
-          </div>
-        `;
-      });
-      
-      focoCard.innerHTML = `
-        <div class="flex items-center justify-between border-b border-amber-200 pb-2">
-          <span class="text-xs font-700 uppercase tracking-wider text-amber-900 flex items-center gap-1.5">
-            🔥 Atributos del Foco de Ruido
-          </span>
-          <span class="px-2 py-0.5 rounded text-[10px] font-700 bg-amber-100 text-amber-800 border border-amber-300">${ft.name || 'Foco'}</span>
-        </div>
-
-        <div class="space-y-2.5 text-[11px]">
-          <div>
-            <label class="text-[10px] text-sgs-gray font-600 block mb-1">Denominación</label>
-            <input class="ac-input-num w-full foco-inp" data-k="denominacion" value="${denom}" placeholder="ej. Compresores, Climatizadoras">
-          </div>
-          <div>
-            <label class="text-[10px] text-sgs-gray font-600 block mb-1">Proceso Asociado</label>
-            <input class="ac-input-num w-full foco-inp" data-k="proceso" value="${proc}" placeholder="ej. Prensado">
-          </div>
-          <div>
-            <label class="text-[10px] text-sgs-gray font-600 block mb-1">Identificación Técnica / Marca / Potencia kW</label>
-            <input class="ac-input-num w-full foco-inp" data-k="identificacion" value="${ident}" placeholder="ej. 4 Compresores Atlas Copco 350 kW">
-          </div>
-
-          <!-- TABLA DE HORARIOS POR TRAMOS -->
-          <div class="bg-amber-50/70 p-2.5 rounded-xl border border-amber-200/80 space-y-2">
-            <div class="flex items-center justify-between">
-              <label class="text-[10px] font-700 uppercase text-amber-900">⏰ Tramos Horarios de Funcionamiento</label>
-              <button type="button" id="btn-add-tramo" class="text-[10px] font-700 bg-amber-200/70 hover:bg-amber-300 text-amber-900 px-2 py-0.5 rounded border border-amber-300 cursor-pointer">+ Añadir Tramo</button>
-            </div>
-            
-            <div class="flex flex-wrap gap-1">
-              <button type="button" class="preset-hor-btn text-[9.5px] bg-white border border-amber-200 px-1.5 py-0.5 rounded hover:bg-amber-100 cursor-pointer" data-p="24h">24h</button>
-              <button type="button" class="preset-hor-btn text-[9.5px] bg-white border border-amber-200 px-1.5 py-0.5 rounded hover:bg-amber-100 cursor-pointer" data-p="07:00-15:00">07:00 - 15:00</button>
-              <button type="button" class="preset-hor-btn text-[9.5px] bg-white border border-amber-200 px-1.5 py-0.5 rounded hover:bg-amber-100 cursor-pointer" data-p="07:00-19:00">07:00 - 19:00</button>
-              <button type="button" class="preset-hor-btn text-[9.5px] bg-white border border-amber-200 px-1.5 py-0.5 rounded hover:bg-amber-100 cursor-pointer" data-p="19:00-23:00">19:00 - 23:00</button>
-              <button type="button" class="preset-hor-btn text-[9.5px] bg-white border border-amber-200 px-1.5 py-0.5 rounded hover:bg-amber-100 cursor-pointer" data-p="23:00-07:00">23:00 - 07:00</button>
-            </div>
-
-            <div id="tramos-container" class="space-y-1.5">
-              ${tramosHtml}
-            </div>
-
-            <div class="text-[10px] text-amber-800 pt-1">
-              <b>Resumen exportable:</b> <span class="font-mono font-600">${summaryHor}</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 pt-1 border-t border-amber-100">
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Ubicación</label>
-              <select class="ac-select w-full foco-inp" data-k="ubicacion">
-                <option value="Exterior" ${ubic==='Exterior'?'selected':''}>Exterior</option>
-                <option value="Interior" ${ubic==='Interior'?'selected':''}>Interior</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Móvil</label>
-              <select class="ac-select w-full foco-inp" data-k="movil">
-                <option value="NO" ${movil==='NO'?'selected':''}>NO</option>
-                <option value="SI" ${movil==='SI'?'selected':''}>SI</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Emisión</label>
-              <select class="ac-select w-full foco-inp" data-k="emision">
-                <option value="---" ${emision==='---'?'selected':''}>---</option>
-                <option value="PA" ${emision==='PA'?'selected':''}>PA (Potencia)</option>
-                <option value="1m" ${emision==='1m'?'selected':''}>1m (Estimada)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 pt-1">
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Variabilidad</label>
-              <select class="ac-select w-full foco-inp" data-k="varTemp">
-                <option value="CONTINUO" ${varTemp==='CONTINUO'?'selected':''}>CONTINUO</option>
-                <option value="ALEATORIO" ${varTemp==='ALEATORIO'?'selected':''}>ALEATORIO</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Frec. Paradas</label>
-              <select class="ac-select w-full foco-inp" data-k="frecParadas">
-                <option value="NO PARA" ${frecPar==='NO PARA'?'selected':''}>NO PARA</option>
-                <option value="BAJA" ${frecPar==='BAJA'?'selected':''}>BAJA</option>
-                <option value="MODERADA" ${frecPar==='MODERADA'?'selected':''}>MODERADA</option>
-                <option value="ALTA" ${frecPar==='ALTA'?'selected':''}>ALTA</option>
-              </select>
-            </div>
-            <div>
-              <label class="text-[10px] text-sgs-gray font-600 block mb-1">Dur. Paradas</label>
-              <select class="ac-select w-full foco-inp" data-k="durParadas">
-                <option value="NO PARA" ${durPar==='NO PARA'?'selected':''}>NO PARA</option>
-                <option value="BAJA" ${durPar==='BAJA'?'selected':''}>BAJA</option>
-                <option value="MODERADA" ${durPar==='MODERADA'?'selected':''}>MODERADA</option>
-                <option value="ALTA" ${durPar==='ALTA'?'selected':''}>ALTA</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      `;
-      
-      focoCard.querySelectorAll('.foco-inp').forEach(inp => {
-        inp.oninput = inp.onchange = () => {
-          ft.fields[inp.dataset.k] = inp.value;
-          if (inp.dataset.k === 'denominacion' && !ft.description) ft.description = inp.value;
-          scheduleAutoSave();
-        };
-      });
-
-      focoCard.querySelectorAll('.tr-ini-h').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].iniH = e.target.value; ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios); scheduleAutoSave(); });
-      focoCard.querySelectorAll('.tr-ini-m').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].iniM = e.target.value; ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios); scheduleAutoSave(); });
-      focoCard.querySelectorAll('.tr-fin-h').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].finH = e.target.value; ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios); scheduleAutoSave(); });
-      focoCard.querySelectorAll('.tr-fin-m').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].finM = e.target.value; ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios); scheduleAutoSave(); });
-      
-      focoCard.querySelectorAll('.tr-del-btn').forEach(btn => btn.onclick = e => {
-        ft.fields.tramosHorarios.splice(+e.target.dataset.i, 1);
-        ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios);
+    body.querySelectorAll('.f-inp').forEach(inp => {
+      inp.oninput = inp.onchange = () => {
+        ft.fields[inp.dataset.k] = inp.value;
+        if (inp.dataset.k === 'denominacion' && !ft.description) ft.description = inp.value;
         scheduleAutoSave();
-        renderFocoCard();
-      });
-
-      const btnAdd = focoCard.querySelector('#btn-add-tramo');
-      if (btnAdd) btnAdd.onclick = () => {
-        ft.fields.tramosHorarios.push({ iniH: '15', iniM: '00', finH: '23', finM: '00' });
-        ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios);
-        scheduleAutoSave();
-        renderFocoCard();
       };
+    });
 
-      focoCard.querySelectorAll('.preset-hor-btn').forEach(btn => {
-        btn.onclick = () => {
-          const p = btn.dataset.p;
-          if (p === '24h') ft.fields.tramosHorarios = [{ iniH: '00', iniM: '00', finH: '24', finM: '00' }];
-          else {
-            const [ini, fin] = p.split('-');
-            const [ih, im] = ini.split(':');
-            const [fh, fm] = fin.split(':');
-            ft.fields.tramosHorarios = [{ iniH: ih, iniM: im, finH: fh, finM: fm }];
-          }
-          ft.fields.horarios = getHorariosSummary(ft.fields.tramosHorarios);
-          scheduleAutoSave();
-          renderFocoCard();
-        };
-      });
-    }
+    body.querySelectorAll('.f-ini-h').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].iniH = e.target.value; scheduleAutoSave(); });
+    body.querySelectorAll('.f-ini-m').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].iniM = e.target.value; scheduleAutoSave(); });
+    body.querySelectorAll('.f-fin-h').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].finH = e.target.value; scheduleAutoSave(); });
+    body.querySelectorAll('.f-fin-m').forEach(inp => inp.oninput = e => { ft.fields.tramosHorarios[+e.target.dataset.i].finM = e.target.value; scheduleAutoSave(); });
 
-    renderFocoCard();
-    const imgsSection = body.querySelector('#e-imgs')?.parentElement;
-    if (imgsSection) body.insertBefore(focoCard, imgsSection);
-    else body.appendChild(focoCard);
-  }
-  else if (ft.type === 'point') {
-    const acCard = document.createElement('div');
-    acCard.className = 'border border-sgs-orange/40 bg-[#fffaf5] p-3.5 rounded-xl flex flex-col gap-3 my-3 shadow-xs';
-    
-    function renderAcusticaWidget() {
-      const res = calcularPropagacionAcustica(ft);
-      const sueloVal = (ft.fields?.suelo || 'DURO').toUpperCase();
-      const orografiaVal = (ft.fields?.orografia || 'PLANA').toUpperCase();
-      const reflexionVal = (ft.fields?.reflexion || 'NO').toUpperCase();
-      const recepcionVal = (ft.fields?.recepcion || 'Continuo');
-      const duracionVal = (ft.fields?.duracion || '5 s');
-      const ctrlFuentesVal = ft.fields?.controlFuentes || 'Se ha verificado el funcionamiento de las fuentes antes del inicio de las medidas';
-      const justFondoVal = ft.fields?.justFondo || 'Las mediciones de fondo se han realizado en los mismos puntos y condiciones';
-      
-      acCard.innerHTML = `
-        <div class="flex items-center justify-between border-b border-sgs-orange/20 pb-2">
-          <span class="text-xs font-700 uppercase tracking-wider text-sgs-black flex items-center gap-1.5">
-            🔊 Condición de Propagación
-          </span>
-          <span class="px-2.5 py-0.5 rounded text-[11px] font-700 ${res.badgeClass}">${res.dictamen}</span>
-        </div>
+    body.querySelectorAll('.f-tr-del').forEach(btn => btn.onclick = e => {
+      ft.fields.tramosHorarios.splice(+e.target.dataset.i, 1);
+      scheduleAutoSave();
+      openEditor(ft.id);
+    });
 
-        <div class="grid grid-cols-2 gap-2.5 text-[11px]">
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Tipo Suelo (G6)</label>
-            <select class="ac-select w-full ac-input" data-key="suelo">
-              <option value="DURO" ${sueloVal==='DURO'?'selected':''}>DURO</option>
-              <option value="BLANDO" ${sueloVal==='BLANDO'?'selected':''}>BLANDO</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Distancia Foco (m) (K6)</label>
-            <input type="number" class="ac-input-num w-full ac-input" data-key="distancia" value="${ft.fields?.distancia || ft.fields?.d || 40}">
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Alt. Micro hm (m) (E6)</label>
-            <input type="number" step="0.1" class="ac-input-num w-full ac-input" data-key="hm" value="${ft.fields?.hm || 1.5}">
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Alt. Foco hf (m) (M6)</label>
-            <input type="number" step="0.1" class="ac-input-num w-full ac-input" data-key="hf" value="${ft.fields?.hf || 6.0}">
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Orografía (I6)</label>
-            <select class="ac-select w-full ac-input" data-key="orografia">
-              <option value="PLANA" ${orografiaVal==='PLANA'?'selected':''}>PLANA</option>
-              <option value="NO PLANA" ${orografiaVal==='NO PLANA'?'selected':''}>NO PLANA</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Reflexión (C6)</label>
-            <select class="ac-select w-full ac-input" data-key="reflexion">
-              <option value="NO" ${reflexionVal==='NO'?'selected':''}>NO</option>
-              <option value="SI" ${reflexionVal==='SI'?'selected':''}>SI</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Tipo Recepción</label>
-            <select class="ac-select w-full ac-input" data-key="recepcion">
-              <option value="Continuo" ${recepcionVal==='Continuo'?'selected':''}>Continuo</option>
-              <option value="Aleatorio" ${recepcionVal==='Aleatorio'?'selected':''}>Aleatorio</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Duración Medidas</label>
-            <select class="ac-select w-full ac-input" data-key="duracion">
-              <option value="5 s" ${duracionVal==='5 s'?'selected':''}>5 s</option>
-              <option value="60 s" ${duracionVal==='60 s'?'selected':''}>60 s</option>
-              <option value="300 s" ${duracionVal==='300 s'?'selected':''}>300 s</option>
-            </select>
-          </div>
-        </div>
+    const addTr = body.querySelector('#f-btn-add-tr');
+    if (addTr) addTr.onclick = () => {
+      ft.fields.tramosHorarios.push({ iniH: '15', iniM: '00', finH: '23', finM: '00' });
+      scheduleAutoSave();
+      openEditor(ft.id);
+    };
 
-        <div class="space-y-2 pt-1 border-t border-sgs-line/60">
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Control de Fuentes (C9:C12)</label>
-            <select class="ac-select w-full ac-input" data-key="controlFuentes">
-              <option value="Se ha verificado el funcionamiento de las fuentes antes del inicio de las medidas" ${ctrlFuentesVal.includes('antes')?'selected':''}>Se ha verificado el funcionamiento antes del inicio</option>
-              <option value="Desde el punto de medida es posible verificar el funcionamiento de la fuente" ${ctrlFuentesVal.includes('posible')?'selected':''}>Desde el punto de medida es posible verificar</option>
-              <option value="Se ha usado un dispositivo de medida en continuo para verificar el funcionamiento durante la medición" ${ctrlFuentesVal.includes('continuo')?'selected':''}>Dispositivo continuo durante la medición</option>
-              <option value="Se ha contado con personal de apoyo verificar el funcionamiento durante la medición" ${ctrlFuentesVal.includes('apoyo')?'selected':''}>Personal de apoyo durante la medición</option>
-            </select>
-          </div>
-          <div>
-            <label class="text-[11px] text-sgs-gray font-600 block mb-1">Justificación Ruido de Fondo (A20)</label>
-            <select class="ac-select w-full ac-input" data-key="justFondo">
-              <option value="Las mediciones de fondo se han realizado en los mismos puntos y en las mismas condiciones" ${justFondoVal.includes('mismos puntos')?'selected':''}>Medidas con actividad parada en el mismo punto</option>
-              <option value="Según la información facilitada por el cliente no es posible parar la actividad... medidas en puntos representativos" ${justFondoVal.includes('representativos')?'selected':''}>Puntos de fondo representativos</option>
-              <option value="Según la información facilitada por el cliente no es posible parar la actividad... fondo límite" ${justFondoVal.includes('fondo límite')?'selected':''}>Fondo límite (cuantifica influencia)</option>
-              <option value="Al no haberse podido justificar el ruido de fondo... resultados son un límite de medición" ${justFondoVal.includes('límite de medición')?'selected':''}>Sin fondo (límite de medición)</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="text-[10px] text-sgs-gray bg-white p-2.5 rounded-lg border border-sgs-line leading-relaxed">
-          <b class="text-sgs-black">Fórmula O6 / Refracción:</b> ${res.detalle}
-        </div>
-      `;
-      
-      acCard.querySelectorAll('.ac-input').forEach(inp => {
-        inp.oninput = inp.onchange = () => {
-          ft.fields = ft.fields || {};
-          ft.fields[inp.dataset.key] = inp.value;
-          if (inp.dataset.key === 'distancia') ft.fields['d'] = inp.value;
-          scheduleAutoSave();
-          renderAcusticaWidget();
-        };
-      });
-    }
-    
-    renderAcusticaWidget();
-    const imgsSection = body.querySelector('#e-imgs')?.parentElement;
-    if (imgsSection) body.insertBefore(acCard, imgsSection);
-    else body.appendChild(acCard);
+    body.querySelectorAll('.f-preset-btn').forEach(btn => {
+      btn.onclick = () => {
+        const p = btn.dataset.p;
+        if (p === '24h') ft.fields.tramosHorarios = [{ iniH: '00', iniM: '00', finH: '24', finM: '00' }];
+        else {
+          const [ini, fin] = p.split('-');
+          const [ih, im] = ini.split(':');
+          const [fh, fm] = fin.split(':');
+          ft.fields.tramosHorarios = [{ iniH: ih, iniM: im, finH: fh, finM: fm }];
+        }
+        scheduleAutoSave();
+        openEditor(ft.id);
+      };
+    });
   }
 
   // controles de relleno (solo áreas)
@@ -4667,5 +4205,330 @@ function toast(msg,type='info'){
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!modal.classList.contains('hidden'))closeModal();});
 })();
 </script>
+
+<!-- ================= MODAL EXPEDIENTE ACÚSTICO & ISO 17025 ================= -->
+<div id="modal-acustica-wrap">
+  <div class="modal-card">
+    
+    <!-- Encabezado del Modal -->
+    <div class="px-5 py-3.5 bg-sgs-dark text-white flex items-center justify-between shrink-0">
+      <div class="flex items-center gap-2.5">
+        <span class="w-3 h-3 rounded-full bg-sgs-orange"></span>
+        <h2 class="font-cond font-700 text-base uppercase tracking-wider">Gestión del Expediente Acústico · Registro 023_RA (ACU-04 Rev. 8)</h2>
+      </div>
+      <button type="button" onclick="window.closeModalAcustica()" class="hover:bg-white/10 rounded-lg p-1.5 text-white/80 hover:text-white transition-all cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Barra de Pestañas del Modal -->
+    <div class="bg-gray-100 border-b border-sgs-line px-4 flex items-center gap-1 overflow-x-auto shrink-0">
+      <button type="button" class="modal-tab-btn active" data-tab="tab-dg" onclick="window.switchModalTab('tab-dg')">
+        📋 1. Datos Generales & Límites
+      </button>
+      <button type="button" class="modal-tab-btn" data-tab="tab-proc" onclick="window.switchModalTab('tab-proc')">
+        🎙️ 2. Proceso Productivo (Voz)
+      </button>
+      <button type="button" class="modal-tab-btn" data-tab="tab-fases" onclick="window.switchModalTab('tab-fases')">
+        ⚡ 3. Fases de Ruido & Horarios
+      </button>
+      <button type="button" class="modal-tab-btn" data-tab="tab-clima" onclick="window.switchModalTab('tab-clima')">
+        🌡️ 4. Equipos & Climatología
+      </button>
+    </div>
+
+    <!-- Contenido Scrollable de las Pestañas -->
+    <div class="flex-1 overflow-y-auto p-6 bg-[#f8f9fa] space-y-6">
+      
+      <!-- PESTAÑA 1: DATOS GENERALES Y LÍMITES -->
+      <div id="tab-dg" class="modal-tab-content space-y-5">
+        
+        <!-- Tarjeta 1: Datos de Instalación -->
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-sgs-line pb-2.5">
+            <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black">Datos Identificativos de la Actuación</span>
+            <span class="px-2 py-0.5 rounded text-[11px] font-700 bg-orange-100 text-sgs-orange border border-orange-200">Hoja DATOS GENERALES</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 text-xs">
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Nº Expediente</label>
+              <input id="ac-expediente" class="ac-input-box font-mono font-700 text-sgs-orange" value="391767_ARDAGH">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Titular / Razón Social</label>
+              <input id="ac-cliente" class="ac-input-box" value="ARDAGH METAL PACKAGING SPAIN S.L.">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Instalación / Centro</label>
+              <input id="ac-instalacion" class="ac-input-box" value="Planta Valdemorillo">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Dirección y Localidad</label>
+              <input id="ac-direccion" class="ac-input-box" value="Calle San Juan s/n, Valdemorillo (Madrid)">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Código CNAE</label>
+              <input id="ac-cnae" class="ac-input-box" value="2592 - Fabricación de envases metálicos">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Autorización Ambiental (AAI)</label>
+              <input id="ac-aai" class="ac-input-box" value="Modificación 11-10-2016 (AAI)">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Objetivo del Ensayo (Fila 16)</label>
+              <select id="ac-objetivo" class="ac-select-box">
+                <option value="Evaluación de conformidad a la normativa de referencia" selected>Evaluación de conformidad a normativa</option>
+                <option value="Determinación de niveles de recepción">Determinación de niveles de recepción</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-sgs-line/60">
+            <label class="block text-[11px] text-sgs-gray font-600 mb-1">Justificación Normativa de Aplicación (Fila 15 / Celda A15)</label>
+            <select id="ac-norma-just" class="ac-select-box">
+              <option value="Al contar la instalación con autorización ambiental, esta es la normativa de aplicación" selected>1. Al contar con AAI, esta es la normativa de aplicación</option>
+              <option value="No se ha identificado autorización ambiental, al encontrarse vigente Ordenanza Municipal, esta es la normativa">2. Sin AAI, de aplicación la Ordenanza Municipal de Ruidos</option>
+              <option value="No se ha identificado AAI ni Ordenanza Municipal, por lo que la normativa autonómica / RD 1367/2007 es de aplicación">3. Sin AAI ni Ordenanza, de aplicación Autonómica / RD 1367/2007</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: Descripción de Instalación con Voz -->
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-3">
+          <div class="flex items-center justify-between border-b border-sgs-line pb-2">
+            <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black">Descripción de la Instalación & Entorno Físico</span>
+            <button id="btn-voice-inst-modal" type="button" class="topbtn-acustica text-xs py-1">
+              🎙️ Dictar por Voz
+            </button>
+          </div>
+          <textarea id="ac-desc-inst" rows="3" class="ac-input-box leading-relaxed text-xs" placeholder="Describe la nave, cerramientos, linderos y superficie...">La instalación industrial se ubica en el polígono industrial sobre una parcela de 45.000 m², compuesta por una nave principal de producción con cerramiento de panel sándwich de 6 m de altura, zona de almacenamiento exterior y muelles de carga.</textarea>
+        </div>
+
+        <!-- Tarjeta 3: Límites Normativos -->
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-sgs-line pb-2">
+            <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black">Valores Límite Normativos (Filas 18 a 35)</span>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-sgs-gray font-600">Indicador Legal:</span>
+              <select id="ac-indicador" class="ac-select-box w-36 h-7 py-0.5">
+                <option value="Lk,Ti" selected>Lk,Ti</option>
+                <option value="Laeq,Ti">Laeq,Ti</option>
+                <option value="Lk">Lk</option>
+                <option value="LAmax">LAmax</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-xs text-sgs-gray block mb-1.5 font-600">Presets Normativos Rápidos:</span>
+            <div class="flex flex-wrap gap-1.5">
+              <button type="button" class="ac-preset-btn" data-lim="70,70,60">🏭 AAI Ardagh (70/70/60)</button>
+              <button type="button" class="ac-preset-btn" data-lim="65,65,55">🏭 Industrial RD 1367 (65/65/55)</button>
+              <button type="button" class="ac-preset-btn" data-lim="55,55,45">🏡 Residencial (55/55/45)</button>
+              <button type="button" class="ac-preset-btn" data-lim="50,50,40">🏥 Sanitario (50/50/40)</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 pt-1 text-center">
+            <div class="p-3 bg-gray-50 rounded-xl border border-sgs-line">
+              <span class="text-xs text-sgs-gray block font-700">☀️ DÍA (Ld)</span>
+              <input id="ac-lim-dia" type="number" class="ac-input-box text-center font-700 text-lg text-sgs-orange mt-1" value="70">
+            </div>
+            <div class="p-3 bg-gray-50 rounded-xl border border-sgs-line">
+              <span class="text-xs text-sgs-gray block font-700">🌅 TARDE (Le)</span>
+              <input id="ac-lim-tarde" type="number" class="ac-input-box text-center font-700 text-lg text-sgs-orange mt-1" value="70">
+            </div>
+            <div class="p-3 bg-gray-50 rounded-xl border border-sgs-line">
+              <span class="text-xs text-sgs-gray block font-700">🌙 NOCHE (Ln)</span>
+              <input id="ac-lim-noche" type="number" class="ac-input-box text-center font-700 text-lg text-sgs-orange mt-1" value="60">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PESTAÑA 2: PROCESO PRODUCTIVO (VOZ) -->
+      <div id="tab-proc" class="modal-tab-content hidden space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-sgs-line pb-2.5">
+            <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black">Memoria Descriptiva del Proceso Industrial</span>
+            <button id="btn-voice-proc-modal" type="button" class="topbtn-acustica text-xs py-1">
+              🎙️ Dictar por Voz (Micrófono)
+            </button>
+          </div>
+
+          <div class="flex items-center justify-between flex-wrap gap-2 bg-[#f8f9fa] p-3 rounded-xl border border-sgs-line">
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <span class="text-xs text-sgs-gray font-700 uppercase">Insertar Foco:</span>
+              <div id="modal-proc-focos-chips" class="flex items-center gap-1 flex-wrap"></div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <select id="modal-proc-template-select" class="ac-select-box w-48 h-8 py-0.5 text-xs">
+                <option value="">Plantilla de etapa...</option>
+                <option value="RECEPCIÓN DE MATERIAS PRIMAS (MP)\nDescarga de bobinas mediante puente grúa.\n\n">Recepción MP</option>
+                <option value="LÍNEAS DE PRODUCCIÓN Y PRENSADO (PR)\nConformado en continuo mediante bodymakers y trimmers.\n\n">Prensado</option>
+                <option value="APLICACIÓN DE PINTURA (PT)\nPrinters rotativas y hornos de secado.\n\n">Pintura</option>
+                <option value="PROCESOS AUXILIARES (AX)\nSala de compresores, torres de refrigeración y climatización.\n\n">Auxiliares</option>
+              </select>
+              <button id="btn-insert-template-modal" type="button" class="topbtn text-xs py-1">+ Insertar</button>
+            </div>
+          </div>
+
+          <textarea id="ac-proc-texto" rows="12" class="ac-input-box text-xs leading-relaxed" placeholder="Escribe o dicta aquí el proceso productivo completo..."></textarea>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 3: FASES DE RUIDO -->
+      <div id="tab-fases" class="modal-tab-content hidden space-y-4">
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-4">
+          <div class="flex items-center justify-between border-b border-sgs-line pb-2.5">
+            <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black">Agrupamiento de Focos por Fases (Filas 113 a 123)</span>
+            <div class="flex items-center gap-2">
+              <button id="btn-auto-fases-modal" type="button" class="topbtn-acustica text-xs py-1">
+                ⚡ Auto-agrupar Focos
+              </button>
+              <button id="btn-add-fase-modal" type="button" class="topbtn text-xs py-1">
+                + Añadir Fase
+              </button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 bg-[#f8f9fa] p-3 rounded-xl border border-sgs-line text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-700">☀️ Día:</span>
+              <input id="ac-fases-hora-dia" class="ac-input-box text-center h-8 font-mono font-700 text-xs" value="7:00-19:00">
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-700">🌅 Tarde:</span>
+              <input id="ac-fases-hora-tarde" class="ac-input-box text-center h-8 font-mono font-700 text-xs" value="19:00-23:00">
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-700">🌙 Noche:</span>
+              <input id="ac-fases-hora-noche" class="ac-input-box text-center h-8 font-mono font-700 text-xs" value="23:00-7:00">
+            </div>
+          </div>
+
+          <div class="overflow-x-auto border border-sgs-line rounded-xl">
+            <table class="w-full text-xs text-left">
+              <thead class="bg-sgs-dark text-white font-700 uppercase text-[11px]">
+                <tr>
+                  <th class="p-2.5 w-14 text-center">Ref.</th>
+                  <th class="p-2.5">Focos de Ruido Incluidos</th>
+                  <th class="p-2.5 w-16 text-center">Día (h)</th>
+                  <th class="p-2.5 w-16 text-center">Tarde (h)</th>
+                  <th class="p-2.5 w-16 text-center">Noche (h)</th>
+                  <th class="p-2.5">Observaciones</th>
+                  <th class="p-2.5 w-10 text-center">✕</th>
+                </tr>
+              </thead>
+              <tbody id="modal-tbody-fases" class="divide-y divide-sgs-line bg-white"></tbody>
+            </table>
+          </div>
+
+          <div>
+            <label class="block text-xs text-sgs-gray font-700 mb-1">Justificación de las Fases (Filas 122-123)</label>
+            <input id="ac-fases-just" class="ac-input-box text-xs" value="Se ha identificado una única fase máxima continua, evaluándose las medidas con los valores obtenidos para esta fase.">
+          </div>
+        </div>
+      </div>
+
+      <!-- PESTAÑA 4: EQUIPOS & CLIMA -->
+      <div id="tab-clima" class="modal-tab-content hidden space-y-4">
+        
+        <!-- Instrumentación -->
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-3">
+          <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black block border-b border-sgs-line pb-2">Personal Técnico e Instrumentos Trazables (ISO 17025)</span>
+          <div class="grid grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Técnico Responsable</label>
+              <input id="ac-tec-resp" class="ac-input-box" value="David de la Peña Martínez">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Técnico de Apoyo</label>
+              <input id="ac-tec-apoyo" class="ac-input-box" value="Rubén García Mingo">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 pt-2 text-xs">
+            <div class="p-2.5 rounded-lg border border-sgs-line bg-[#f8f9fa] space-y-1.5">
+              <span class="font-700 text-sgs-orange block">🔊 Sonómetro</span>
+              <input id="ac-sono-serie" class="ac-input-box text-xs" value="BRÜEL & KJÆR 2250 (Nº 3012334)">
+              <input id="ac-sono-calib" class="ac-input-box text-[11px]" value="Calib: 29/11/2023 - Vence: 29/11/2025">
+            </div>
+            <div class="p-2.5 rounded-lg border border-sgs-line bg-[#f8f9fa] space-y-1.5">
+              <span class="font-700 text-sgs-orange block">🎯 Calibrador</span>
+              <input id="ac-calib-serie" class="ac-input-box text-xs" value="BRÜEL & KJÆR 4231 (Nº 2459803)">
+              <input id="ac-calib-calib" class="ac-input-box text-[11px]" value="Calib: 29/11/2023 - Vence: 29/11/2025">
+            </div>
+            <div class="p-2.5 rounded-lg border border-sgs-line bg-[#f8f9fa] space-y-1.5">
+              <span class="font-700 text-sgs-orange block">🌬️ Anemómetro</span>
+              <input id="ac-anem-serie" class="ac-input-box text-xs" value="TESTO Molinete (Nº 46556850/0922)">
+              <input id="ac-anem-calib" class="ac-input-box text-[11px]" value="Calib: 20/02/2024 - Vence: 20/02/2026">
+            </div>
+          </div>
+
+          <div class="p-3 bg-amber-50 rounded-lg border border-amber-200 mt-2">
+            <span class="font-700 text-amber-900 text-xs block mb-2">Verificación In Situ del Sonómetro (|ΔL| ≤ 0.3 dB)</span>
+            <div class="grid grid-cols-4 gap-2 text-center text-xs">
+              <div><span class="text-sgs-gray block text-[10px]">Patrón (dB)</span><input id="ac-cal-patron" type="number" step="0.01" class="ac-input-box text-center font-mono" value="93.91"></div>
+              <div><span class="text-sgs-gray block text-[10px]">Inicial (dB)</span><input id="ac-cal-ini" type="number" step="0.01" class="ac-input-box text-center font-mono font-700" value="93.87"></div>
+              <div><span class="text-sgs-gray block text-[10px]">Intermedio (dB)</span><input id="ac-cal-inter" type="number" step="0.01" class="ac-input-box text-center font-mono" value="93.86"></div>
+              <div><span class="text-sgs-gray block text-[10px]">Final (dB)</span><input id="ac-cal-fin" type="number" step="0.01" class="ac-input-box text-center font-mono font-700" value="93.83"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Climatología -->
+        <div class="bg-white p-5 rounded-xl border border-sgs-line shadow-xs space-y-3">
+          <span class="font-cond font-700 text-sm uppercase tracking-wide text-sgs-black block border-b border-sgs-line pb-2">Climatología de Campo</span>
+          <div class="grid grid-cols-4 gap-3 text-xs">
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Temp. Ini/Fin (°C)</label>
+              <div class="grid grid-cols-2 gap-1"><input id="ac-temp-ini" type="number" step="0.1" class="ac-input-box text-center" value="17.0"><input id="ac-temp-fin" type="number" step="0.1" class="ac-input-box text-center" value="9.0"></div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Hum. Ini/Fin (%)</label>
+              <div class="grid grid-cols-2 gap-1"><input id="ac-hum-ini" type="number" step="0.1" class="ac-input-box text-center" value="52.0"><input id="ac-hum-fin" type="number" step="0.1" class="ac-input-box text-center" value="54.0"></div>
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Viento Máx (m/s)</label>
+              <input id="ac-vmax" type="number" step="0.1" class="ac-input-box text-center font-700" value="1.5">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Dir. Viento θ (°)</label>
+              <input id="ac-vdir" type="number" class="ac-input-box text-center" value="30">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Nubosidad (%)</label>
+              <input id="ac-nub" type="number" class="ac-input-box text-center" value="20">
+            </div>
+            <div>
+              <label class="block text-[11px] text-sgs-gray font-600 mb-1">Sol</label>
+              <select id="ac-sol" class="ac-select-box">
+                <option value="SI" selected>SÍ</option>
+                <option value="NO">NO</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Pie del Modal con Guardar y Cerrar -->
+    <div class="px-5 py-3 bg-white border-t border-sgs-line flex items-center justify-between shrink-0">
+      <button type="button" onclick="window.exportar023RA()" class="topbtn-export-ra text-xs">
+        📊 Exportar 023_RA (Excel)
+      </button>
+      <button type="button" onclick="window.closeModalAcustica()" class="bg-sgs-orange hover:bg-sgs-orangeD text-white px-5 py-2 rounded-lg font-700 text-xs shadow-sm cursor-pointer">
+        Guardar y Volver al Mapa
+      </button>
+    </div>
+
+  </div>
+</div>
+
 </body>
 </html>
