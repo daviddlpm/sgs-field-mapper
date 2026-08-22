@@ -1,12 +1,12 @@
 {
-  "name": "SGS Field Mapper · Acústica & ISO 17025",
-  "short_name": "FieldMapper",
-  "description": "Herramienta PWA de mapeo cartográfico, inventario de focos y cálculo de propagación acústica para laboratorio de ensayo.",
+  "name": "SGS Field Mapper v20.33 MT LDI · 023_RA & Persistencia",
+  "short_name": "FieldMapper v20.33",
+  "description": "Editor cartográfico de campo y acústica ISO 17025 offline",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#2A2C2E",
+  "background_color": "#F4F5F6",
   "theme_color": "#F36F21",
   "icons": [
     {
