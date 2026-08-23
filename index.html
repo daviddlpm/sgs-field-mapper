@@ -9651,6 +9651,58 @@ window.assignCatastroToEntorno = function() {
   }
   window.closeCatastroModal();
 };
+
+// ============================================================
+// MOTOR DE ACTUALIZACIÓN INMEDIATA PWA & GITHUB PAGES
+// ============================================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
+      .then(reg => {
+        reg.update(); // Forzar comprobación de versión en cada carga
+        reg.addEventListener('updatefound', () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                if (typeof toast === 'function') {
+                  toast('🚀 ¡Nueva versión disponible! Actualizando la aplicación...', 'info');
+                }
+                setTimeout(() => window.location.reload(), 1200);
+              }
+            });
+          }
+        });
+      })
+      .catch(err => console.warn('SW reg error:', err));
+  });
+
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
+  });
+}
+
+// Función global para forzar la recarga limpia de caché
+window.sgsForceUpdate = async function() {
+  if (typeof toast === 'function') toast('Limpiando caché y recargando última versión...', 'info');
+  try {
+    if ('serviceWorker' in navigator) {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      for (const r of regs) await r.unregister();
+    }
+    if ('caches' in window) {
+      const keys = await caches.keys();
+      for (const k of keys) await caches.delete(k);
+    }
+  } catch(e) {
+    console.warn(e);
+  }
+  window.location.href = window.location.pathname + '?v=' + Date.now();
+};
 </script>
 
 </body>

@@ -1,4 +1,6 @@
-const CACHE_NAME = 'sgs-fieldmapper-v20-52-mt-ldi';
+// SGS Field Mapper · Service Worker de Alta Disponibilidad & Actualización Inmediata
+const CACHE_NAME = 'sgs-fieldmapper-v20-65-mt-ldi-dynamic';
+
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -7,16 +9,18 @@ const ASSETS_TO_CACHE = [
   './icon-512.png'
 ];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
+// Instalación: Forzar activación inmediata
+self.addEventListener('install', (event) => {
+  event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
     }).then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
+// Activación: Eliminar cualquier caché antiguo y tomar control de las pestañas
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
     caches.keys().then((keys) => {
       return Promise.all(
         keys.map((key) => {
@@ -29,25 +33,41 @@ self.addEventListener('activate', (e) => {
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        fetch(e.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(e.request, networkResponse);
-            });
-          }
-        }).catch(() => {});
-        return cachedResponse;
-      }
-      return fetch(e.request).then((networkResponse) => {
+// Interceptor de peticiones con estrategia NETWORK-FIRST para index.html
+self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+  
+  const url = event.request.url;
+  const isHtml = event.request.mode === 'navigate' || url.includes('index.html') || url.endsWith('/') || url.endsWith('.html');
+  
+  if (isHtml) {
+    // 1. Network-First: Siempre busca la versión más reciente en GitHub Pages
+    event.respondWith(
+      fetch(event.request, { cache: 'no-store' }).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(e.request, responseToCache);
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
+      }).catch(() => {
+        // Fallback offline si no hay conexión a internet
+        return caches.match(event.request).then(cached => cached || caches.match('./index.html'));
+      })
+    );
+    return;
+  }
+  
+  // 2. Cache-First con fallback a red para recursos estáticos (iconos, fuentes)
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
+      return fetch(event.request).then((networkResponse) => {
+        if (networkResponse && networkResponse.status === 200) {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
           });
         }
         return networkResponse;
