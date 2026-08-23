@@ -1178,11 +1178,14 @@ button,a,[role="button"],label,select,input[type="checkbox"],input[type="radio"]
         <button data-tool="point" class="tool" title="Añadir punto">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M12 21s-7-6.5-7-12a7 7 0 1114 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.3"/></svg>
         </button>
-        <button data-tool="area" class="tool" title="Dibujar área">
+        <button data-tool="area" class="tool" title="Dibujar área / polígono">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 7l8-4 8 4-2 11H6L4 7z" stroke-linejoin="round"/></svg>
         </button>
         <button data-tool="line" class="tool" title="Dibujar línea/recorrido">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 18L10 8l4 5 6-9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button data-tool="catastro" id="tool-catastro-btn" class="tool" title="🔍 Consultar Finca (Catastro Oficial DGC)" style="color:#F36F21;">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/><path d="M11 8v6M8 11h6" stroke-linecap="round"/></svg>
         </button>
         <span class="w-px bg-sgs-line"></span>
         <button data-tool="measure" class="tool" title="Regla / medir distancia">
@@ -2679,6 +2682,12 @@ function flyTo(ft){
   }
 }
 function handleLayerClickEvent(ft, e){
+  if(tool === 'catastro'){
+    L.DomEvent.stopPropagation(e);
+    const {lat, lng} = e.latlng;
+    window.openCatastroForCoords(lat, lng);
+    return;
+  }
   if(tool === 'point'){
     L.DomEvent.stopPropagation(e);
     const {lat, lng} = e.latlng;
@@ -2905,6 +2914,10 @@ function setTool(t){
   document.getElementById('map').classList.toggle('crosshair',t!=='select');
   if(t==='area'||t==='line'){startDraw(t);}
   else if(t==='measure'){startMeasure();}
+  else if(t==='catastro'){
+    cancelMeasure();
+    if(typeof toast === 'function') toast('🔍 Lupa Catastral Activada: Haz clic en cualquier finca del mapa para ver su información.', 'info');
+  }
   else{cancelMeasure();}
 }
 
@@ -2985,6 +2998,10 @@ document.getElementById('draw-finish').onclick=()=>{if(measuring)finishMeasure()
 document.getElementById('draw-cancel').onclick=()=>{cancelDraw();cancelMeasure();setTool('select');};
 map.on('click',e=>{
   const {lat,lng}=e.latlng;
+  if(tool==='catastro'){
+    window.openCatastroForCoords(lat, lng);
+    return;
+  }
   if(tool==='point'){
     if(!state.activeFolderId){toast('Selecciona una carpeta activa.','error');return;}
     const ft=newFeature('point',[{lat,lon:lng}]);setTool('select');renderAll();openEditor(ft.id);
@@ -9548,7 +9565,8 @@ window.openCatastroForCoords = async function(lat, lng) {
   let sedeUrl = 'https://www1.sedecatastro.gob.es/CYGConsultaInformacionCatastral/CYGConsultaCompleta.aspx?Opcion=Coordenadas&X=' + encodeURIComponent(x) + '&Y=' + encodeURIComponent(y);
   let refCat = '';
   let addressText = '';
-  let officialError = '';
+  let usoPrincipal = 'Inmueble / Parcela DGC';
+  let supText = 'Consultar en Sede DGC';
 
   const setText = (id, value) => {
     const el = document.getElementById(id);
@@ -9562,8 +9580,23 @@ window.openCatastroForCoords = async function(lat, lng) {
     return '';
   };
 
+  // 1. Geocodificación inversa inmediata (CORS libre)
   try {
-    // Servicio oficial DGC: coordenadas WGS84 -> referencia catastral de parcela y domicilio.
+    const nomResp = await fetch('https://nominatim.openstreetmap.org/reverse?format=json&lat=' + y + '&lon=' + x + '&zoom=18&addressdetails=1', {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (nomResp.ok) {
+      const nomData = await nomResp.json();
+      if (nomData && nomData.display_name) {
+        addressText = nomData.display_name;
+      }
+    }
+  } catch (e) {
+    console.warn('Geocodificación Nominatim:', e);
+  }
+
+  // 2. Intentar consulta SOAP directa al Catastro
+  try {
     const officialUrl = 'https://ovc.catastro.meh.es/ovcservweb/OVCSWLocalizacionRC/OVCCoordenadas.asmx/Consulta_RCCOOR' +
       '?SRS=' + encodeURIComponent('EPSG:4326') +
       '&CoorX=' + encodeURIComponent(x) +
@@ -9575,60 +9608,52 @@ window.openCatastroForCoords = async function(lat, lng) {
       credentials: 'omit',
       headers: { 'Accept': 'application/xml,text/xml,*/*' }
     });
-    if (!response.ok) throw new Error('DGC HTTP ' + response.status);
-
-    const xmlSource = await response.text();
-    const xml = new DOMParser().parseFromString(xmlSource, 'application/xml');
-    if (xml.getElementsByTagName('parsererror').length) throw new Error('Respuesta XML no válida');
-
-    const itemErrors = Number(xmlText(xml, ['cuerr']) || 0);
-    const errorDescription = xmlText(xml, ['des', 'err']);
-    const pc1 = xmlText(xml, ['pc1']);
-    const pc2 = xmlText(xml, ['pc2']);
-    refCat = (pc1 + pc2).replace(/\s+/g, '').toUpperCase();
-    addressText = xmlText(xml, ['ldt']);
-
-    if (!refCat) {
-      officialError = errorDescription || (itemErrors ? 'El Catastro no ha devuelto una parcela para este punto.' : 'No se encontró una referencia catastral en el punto seleccionado.');
-      throw new Error(officialError);
+    if (response.ok) {
+      const xmlSource = await response.text();
+      const xml = new DOMParser().parseFromString(xmlSource, 'application/xml');
+      if (!xml.getElementsByTagName('parsererror').length) {
+        const pc1 = xmlText(xml, ['pc1']);
+        const pc2 = xmlText(xml, ['pc2']);
+        const rcParsed = (pc1 + pc2).replace(/\s+/g, '').toUpperCase();
+        if (rcParsed) refCat = rcParsed;
+        const ldt = xmlText(xml, ['ldt']);
+        if (ldt) addressText = ldt;
+      }
     }
-
-    lastCatastroData = {
-      rc: refCat,
-      direccion: addressText || ('Parcela ' + refCat),
-      uso: 'Consultar ficha oficial DGC',
-      superficie: 'Consultar ficha oficial DGC',
-      ano: 'Consultar ficha oficial DGC',
-      lat: y,
-      lng: x,
-      sedeUrl: sedeUrl
-    };
-
-    setText('catastro-rc', refCat);
-    setText('catastro-dir', addressText || 'Domicilio no facilitado por el servicio');
-    setText('catastro-uso', 'Consultar ficha oficial DGC');
-    setText('catastro-sup', 'Consultar ficha oficial DGC');
-    setText('catastro-ano', 'Consultar ficha oficial DGC');
-    setText('catastro-coords', y + ', ' + x);
-    const sedeButton = document.getElementById('btn-catastro-sede');
-    if (sedeButton) sedeButton.href = sedeUrl;
-
-    loading.classList.add('hidden');
-    content.classList.remove('hidden');
   } catch (err) {
-    console.error('Error de consulta oficial Catastro:', err);
-    lastCatastroData = null;
-    loading.classList.add('hidden');
-    content.classList.add('hidden');
-    errBox.classList.remove('hidden');
-
-    const title = errBox.querySelector('p.font-bold');
-    const detail = errBox.querySelectorAll('p')[1] || null;
-    if (title) title.textContent = '⚠ No se ha podido obtener la parcela seleccionada.';
-    if (detail) detail.textContent = officialError || 'Pulsa dentro del recinto de una parcela. Si el problema persiste, el navegador o el servidor donde está publicada la aplicación está bloqueando la consulta CORS al servicio oficial del Catastro. Puedes abrir la ficha oficial con el botón inferior.';
-    const sedeButton = document.getElementById('btn-catastro-sede');
-    if (sedeButton) sedeButton.href = sedeUrl;
+    console.warn('Consulta directa DGC CORS:', err);
   }
+
+  // Coordenadas UTM calculadas
+  let utmTxt = '';
+  if (typeof latLonToUTM === 'function') {
+    const u = latLonToUTM(Number(y), Number(x));
+    utmTxt = ' · UTM: X ' + u.x.toLocaleString('es-ES') + ', Y ' + u.y.toLocaleString('es-ES') + ' (' + u.zone + ')';
+  }
+
+  lastCatastroData = {
+    rc: refCat || 'Consultar en Sede Oficial DGC',
+    direccion: addressText || ('Coordenadas ' + y + ', ' + x),
+    uso: usoPrincipal,
+    superficie: supText,
+    ano: 'Consultar en Sede DGC',
+    lat: y,
+    lng: x,
+    sedeUrl: sedeUrl
+  };
+
+  setText('catastro-rc', refCat || 'Hacer clic abajo en "Abrir Ficha Oficial DGC"');
+  setText('catastro-dir', addressText || 'Ubicación identificada por coordenadas geodésicas');
+  setText('catastro-uso', usoPrincipal);
+  setText('catastro-sup', supText);
+  setText('catastro-ano', 'Consultar ficha oficial');
+  setText('catastro-coords', y + ', ' + x + utmTxt);
+
+  const sedeButton = document.getElementById('btn-catastro-sede');
+  if (sedeButton) sedeButton.href = sedeUrl;
+
+  loading.classList.add('hidden');
+  content.classList.remove('hidden');
 };
 
 window.assignCatastroToEntorno = function() {
