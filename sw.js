@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sgs-fieldmapper-v20-33-mt-ldi';
+const CACHE_NAME = 'sgs-fieldmapper-v20-52-mt-ldi';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
