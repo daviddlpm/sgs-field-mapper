@@ -1,5 +1,5 @@
 // SGS Field Mapper · Service Worker de Alta Disponibilidad & Actualización Inmediata
-const CACHE_NAME = 'sgs-fieldmapper-v20-65-mt-ldi-dynamic';
+const CACHE_NAME = 'sgs-fieldmapper-v20-69-mt-ldi-dynamic';
 
 const ASSETS_TO_CACHE = [
   './',
